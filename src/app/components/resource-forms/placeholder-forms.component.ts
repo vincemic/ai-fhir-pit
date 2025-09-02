@@ -39,17 +39,7 @@ export class EncounterFormComponent implements ResourceFormComponent {
   @Input() readonly: boolean = true;
 }
 
-@Component({
-  selector: 'app-procedure-form',
-  imports: [CommonModule],
-  templateUrl: './procedure-form.component.html',
-  styles: [`.procedure-form { padding: 2rem; text-align: center; color: var(--vscode-text-secondary); background: var(--vscode-bg-secondary); border-radius: 8px; }`],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class ProcedureFormComponent implements ResourceFormComponent {
-  @Input() resource: FhirResource | null = null;
-  @Input() readonly: boolean = true;
-}
+
 
 @Component({
   selector: 'app-medication-statement-form',

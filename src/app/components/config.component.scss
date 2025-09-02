@@ -206,14 +206,24 @@
 }
 
 // Configuration Form
-.config-form-section {
+.config-form-section,
+.custom-server-section {
   margin-bottom: var(--spacing-xl);
 
-  .form-card {
+  .form-card,
+  .section-card {
     background: var(--color-panel);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     overflow: hidden;
+    padding: var(--spacing-lg);
+
+    h2 {
+      color: var(--color-text);
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin: 0 0 var(--spacing-lg) 0;
+    }
 
     .form-header {
       background: var(--color-header-bg);
@@ -233,13 +243,12 @@
       }
     }
 
-    .config-form {
-      padding: var(--spacing-lg);
-
+    .config-form,
+    form {
       .form-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: var(--spacing-md);
+        gap: var(--spacing-lg);
         margin-bottom: var(--spacing-lg);
 
         .form-group-full,
@@ -249,18 +258,24 @@
 
         @media (min-width: 1200px) {
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-          gap: var(--spacing-lg);
+          gap: var(--spacing-xl);
         }
 
         @media (max-width: 768px) {
           grid-template-columns: 1fr;
+          gap: var(--spacing-md);
         }
       }
 
       .form-group {
         display: flex;
         flex-direction: column;
-        gap: var(--spacing-xs);
+        gap: var(--spacing-sm);
+        margin-bottom: var(--spacing-lg);
+
+        &.checkbox-group {
+          margin-bottom: var(--spacing-md);
+        }
 
         label {
           font-size: var(--font-size-sm);
@@ -268,6 +283,7 @@
           color: var(--color-text-secondary);
           text-transform: uppercase;
           letter-spacing: 0.5px;
+          margin-bottom: var(--spacing-xs);
 
           &.checkbox-label {
             display: flex;
@@ -276,18 +292,21 @@
             text-transform: none;
             font-weight: 500;
             cursor: pointer;
+            margin-bottom: 0;
 
             input[type="checkbox"] {
               display: none;
             }
 
-            .checkbox-custom {
+            .checkbox-custom,
+            .checkmark {
               width: 20px;
               height: 20px;
               border: 2px solid var(--color-border);
               border-radius: var(--border-radius-sm);
               position: relative;
               transition: all 0.2s ease;
+              flex-shrink: 0;
 
               &::after {
                 content: '';
@@ -304,7 +323,8 @@
               }
             }
 
-            input[type="checkbox"]:checked + .checkbox-custom {
+            input[type="checkbox"]:checked + .checkbox-custom,
+            input[type="checkbox"]:checked + .checkmark {
               background: var(--color-accent);
               border-color: var(--color-accent);
 
@@ -316,7 +336,7 @@
         }
 
         .form-control {
-          padding: var(--spacing-sm);
+          padding: var(--spacing-md);
           border: 1px solid var(--color-border);
           border-radius: var(--border-radius-sm);
           background: var(--color-input);
@@ -324,6 +344,7 @@
           font-size: var(--font-size-base);
           font-family: inherit;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
+          min-height: 44px; /* Ensure minimum touch target size */
 
           &:focus {
             outline: none;
@@ -345,14 +366,22 @@
           &.ng-valid.ng-touched {
             border-color: var(--color-success);
           }
+
+          /* Textarea specific styles */
+          &[rows] {
+            resize: vertical;
+            min-height: 80px;
+          }
         }
 
-        .form-error {
+        .form-error,
+        .error-text {
           color: var(--color-error);
           font-size: var(--font-size-xs);
           display: flex;
           align-items: center;
           gap: var(--spacing-xs);
+          margin-top: var(--spacing-xs);
 
           &:before {
             content: "⚠️";
@@ -366,10 +395,14 @@
         gap: var(--spacing-md);
         justify-content: flex-end;
         flex-wrap: wrap;
+        margin-top: var(--spacing-xl);
+        padding-top: var(--spacing-lg);
+        border-top: 1px solid var(--color-border);
 
         @media (max-width: 768px) {
           justify-content: stretch;
 
+          .btn,
           .btn-primary,
           .btn-secondary {
             flex: 1;
@@ -387,6 +420,20 @@
 // Saved Servers Section
 .saved-servers-section {
   margin-bottom: var(--spacing-xl);
+
+  .section-card {
+    background: var(--color-panel);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+
+    h2 {
+      color: var(--color-text);
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin: 0 0 var(--spacing-lg) 0;
+    }
+  }
 
   .servers-header {
     display: flex;
@@ -440,16 +487,14 @@
   .servers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
 
     @media (min-width: 1200px) {
       grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-      gap: var(--spacing-lg);
     }
 
     @media (min-width: 1600px) {
       grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-      gap: var(--spacing-lg);
     }
 
     @media (max-width: 768px) {
@@ -458,10 +503,10 @@
   }
 
   .server-card {
-    background: var(--color-panel);
+    background: var(--color-section-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     transition: all 0.2s ease;
 
     &:hover {
@@ -475,14 +520,19 @@
       background: var(--color-accent-alpha);
     }
 
+    &.preset {
+      background: var(--color-panel);
+    }
+
     .server-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
       gap: var(--spacing-sm);
 
-      .server-name {
+      .server-name,
+      h3 {
         color: var(--color-text);
         font-weight: 600;
         font-size: var(--font-size-md);
@@ -490,6 +540,7 @@
         align-items: center;
         gap: var(--spacing-xs);
         flex: 1;
+        margin: 0;
 
         .default-badge {
           background: var(--color-accent);
@@ -509,20 +560,21 @@
       }
     }
 
-    .server-content {
+    .server-content,
+    .server-details {
       .server-url {
         color: var(--color-text-secondary);
         font-family: var(--font-mono);
         font-size: var(--font-size-sm);
         word-break: break-all;
-        margin-bottom: var(--spacing-xs);
+        margin-bottom: var(--spacing-sm);
       }
 
       .server-description {
         color: var(--color-text-secondary);
         font-size: var(--font-size-sm);
         line-height: 1.4;
-        margin-bottom: var(--spacing-xs);
+        margin-bottom: var(--spacing-sm);
       }
 
       .server-version {
@@ -531,12 +583,41 @@
         font-weight: 600;
       }
     }
+
+    .server-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--color-border);
+    }
   }
 }
 
 // Preset Servers Section
 .preset-servers-section {
   margin-bottom: var(--spacing-xl);
+
+  .section-card {
+    background: var(--color-panel);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+
+    h2 {
+      color: var(--color-text);
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin: 0 0 var(--spacing-sm) 0;
+    }
+
+    .section-description,
+    p {
+      color: var(--color-text-secondary);
+      font-size: var(--font-size-sm);
+      margin: 0 0 var(--spacing-lg) 0;
+    }
+  }
 
   .preset-header {
     text-align: center;
@@ -556,21 +637,23 @@
     }
   }
 
-  .preset-grid {
+  .preset-grid,
+  .servers-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-md);
+    gap: var(--spacing-lg);
 
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
     }
   }
 
-  .preset-card {
+  .preset-card,
+  .server-card.preset {
     background: var(--color-section-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     transition: all 0.2s ease;
 
     &:hover {
@@ -579,34 +662,48 @@
       box-shadow: 0 4px 8px var(--color-shadow);
     }
 
-    .preset-header {
+    .preset-header,
+    .server-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: var(--spacing-sm);
+      margin-bottom: var(--spacing-md);
       gap: var(--spacing-sm);
 
-      .preset-name {
+      .preset-name,
+      h3 {
         color: var(--color-text);
         font-weight: 600;
-        font-size: var(--font-size-sm);
+        font-size: var(--font-size-md);
+        margin: 0;
       }
     }
 
-    .preset-content {
-      .preset-url {
+    .preset-content,
+    .server-details {
+      .preset-url,
+      .server-url {
         color: var(--color-text-secondary);
         font-family: var(--font-mono);
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
         word-break: break-all;
-        margin-bottom: var(--spacing-xs);
+        margin-bottom: var(--spacing-sm);
       }
 
-      .preset-description {
+      .preset-description,
+      .server-description {
         color: var(--color-text-secondary);
-        font-size: var(--font-size-xs);
+        font-size: var(--font-size-sm);
         line-height: 1.4;
       }
+    }
+
+    .server-actions {
+      margin-top: var(--spacing-md);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      gap: var(--spacing-sm);
     }
   }
 }
@@ -718,7 +815,13 @@
 }
 
 // Button Styles
-.btn-primary, .btn-secondary, .btn-small {
+.btn,
+.btn-primary, 
+.btn-secondary, 
+.btn-small,
+.btn-sm,
+.btn-outline,
+.btn-danger {
   padding: var(--spacing-sm) var(--spacing-md);
   border: none;
   border-radius: var(--border-radius-sm);
@@ -732,6 +835,7 @@
   gap: var(--spacing-xs);
   text-decoration: none;
   white-space: nowrap;
+  min-height: 44px; /* Ensure minimum touch target size */
 
   &:disabled {
     opacity: 0.6;
@@ -754,7 +858,8 @@
   }
 }
 
-.btn-secondary {
+.btn-secondary,
+.btn-outline {
   background: var(--color-panel);
   color: var(--color-text);
   border: 1px solid var(--color-border);
@@ -765,15 +870,20 @@
   }
 }
 
-.btn-small {
-  padding: var(--spacing-xs) var(--spacing-sm);
-  font-size: var(--font-size-xs);
-  background: var(--color-accent);
+.btn-danger {
+  background: var(--color-error);
   color: var(--color-accent-text);
 
   &:hover:not(:disabled) {
-    background: var(--color-accent-hover);
+    background: var(--color-error-hover);
   }
+}
+
+.btn-small,
+.btn-sm {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  min-height: 36px;
 
   &.secondary {
     background: var(--color-panel);
@@ -783,15 +893,6 @@
     &:hover:not(:disabled) {
       background: var(--color-hover);
       color: var(--color-text);
-    }
-  }
-
-  &.danger {
-    background: var(--color-error);
-    color: var(--color-accent-text);
-
-    &:hover:not(:disabled) {
-      background: var(--color-error-hover);
     }
   }
 }

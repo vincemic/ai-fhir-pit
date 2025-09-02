@@ -109,7 +109,16 @@
                   @if (fhirService.isLoading()) {
                     <span class="loading-spinner"></span>
                   } @else {
-                    View Details
+                    👁️ View Details
+                  }
+                </button>
+                <button (click)="editResource(entry.resource!); $event.stopPropagation()" 
+                        class="btn-small secondary"
+                        [disabled]="fhirService.isLoading()">
+                  @if (fhirService.isLoading()) {
+                    <span class="loading-spinner"></span>
+                  } @else {
+                    ✏️ Edit
                   }
                 </button>
                 @if (hasReferences(entry.resource!)) {
@@ -119,7 +128,7 @@
                     @if (fhirService.isLoading()) {
                       <span class="loading-spinner"></span>
                     } @else {
-                      References ({{ countReferences(entry.resource!) }})
+                      🔗 References ({{ countReferences(entry.resource!) }})
                     }
                   </button>
                 }
@@ -205,9 +214,15 @@
           }
         </div>
         <div class="modal-footer">
+          <button (click)="editResource(selectedResource()!)" class="btn-secondary">
+            ✏️ Edit Resource
+          </button>
           <button (click)="closeModal()" class="btn-secondary">Close</button>
         </div>
       </div>
     </div>
   }
+
+  <!-- Resource Form Modal -->
+  <app-resource-form-modal (resourceUpdated)="onResourceUpdated($event)"></app-resource-form-modal>
 </div>

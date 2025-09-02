@@ -5,12 +5,12 @@ import { PatientFormComponent } from './resource-forms/patient-form.component';
 import { PractitionerFormComponent } from './resource-forms/practitioner-form.component';
 import { ObservationFormComponent } from './resource-forms/observation-form.component';
 import { ConditionFormComponent } from './resource-forms/condition-form.component';
+import { ProcedureFormComponent } from './resource-forms/procedure-form.component';
 import { CoverageFormComponent } from './resource-forms/coverage-form.component';
 import { 
   OrganizationFormComponent,
   LocationFormComponent,
   EncounterFormComponent,
-  ProcedureFormComponent,
   MedicationStatementFormComponent,
   DiagnosticReportFormComponent,
   ImmunizationFormComponent,

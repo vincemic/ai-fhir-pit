@@ -1,0 +1,633 @@
+<div class="modal-overlay" (click)="onOverlayClick()" [class.show]="modalService.isOpen()">
+  <div class="modal-content resource-form-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>
+        @if (modalService.mode() === 'create') {
+          Create {{ modalService.resourceType() }}
+        } @else {
+          Edit {{ modalService.resourceType() }}
+        }
+      </h2>
+      <button (click)="onCancel()" class="modal-close" type="button">×</button>
+    </div>
+
+    <div class="modal-body">
+      @if (modalService.resourceType() && resourceForm()) {
+        <form [formGroup]="resourceForm()!" (ngSubmit)="onSubmit()" class="resource-form">
+          @switch (modalService.resourceType()) {
+            @case ('Patient') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="identifier">Identifier *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Patient identifier" />
+                    @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
+                      <div class="form-error">Identifier is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="active">Active Status</label>
+                    <select id="active" formControlName="active" class="form-control">
+                      <option value="true">Active</option>
+                      <option value="false">Inactive</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Name Information -->
+                <div class="form-section-group">
+                  <h3>Name Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="family">Family Name *</label>
+                    <input id="family" formControlName="family" class="form-control" placeholder="Last name" />
+                    @if (resourceForm()!.get('family')?.errors?.['required'] && resourceForm()!.get('family')?.touched) {
+                      <div class="form-error">Family name is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="given">Given Names *</label>
+                    <input id="given" formControlName="given" class="form-control" placeholder="First and middle names" />
+                    @if (resourceForm()!.get('given')?.errors?.['required'] && resourceForm()!.get('given')?.touched) {
+                      <div class="form-error">Given name is required</div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Demographics -->
+                <div class="form-section-group">
+                  <h3>Demographics</h3>
+                  
+                  <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" formControlName="gender" class="form-control">
+                      <option value="">Select gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input id="birthDate" type="date" formControlName="birthDate" class="form-control" />
+                  </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section-group">
+                  <h3>Contact Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="+1234567890" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" formControlName="email" class="form-control" placeholder="patient@example.com" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Observation') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="final">Final</option>
+                      <option value="preliminary">Preliminary</option>
+                      <option value="amended">Amended</option>
+                      <option value="corrected">Corrected</option>
+                      <option value="cancelled">Cancelled</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="effectiveDateTime">Effective Date/Time *</label>
+                    <input id="effectiveDateTime" type="datetime-local" formControlName="effectiveDateTime" class="form-control" />
+                  </div>
+                </div>
+
+                <!-- Code Information -->
+                <div class="form-section-group">
+                  <h3>Observation Code</h3>
+                  
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://loinc.org">LOINC</option>
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://hl7.org/fhir/observation-category">Observation Category</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 29463-7" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Body weight" />
+                  </div>
+                </div>
+
+                <!-- Value Information -->
+                <div class="form-section-group">
+                  <h3>Value</h3>
+                  
+                  <div class="form-group">
+                    <label for="valueType">Value Type</label>
+                    <select id="valueType" formControlName="valueType" class="form-control">
+                      <option value="valueQuantity">Quantity</option>
+                      <option value="valueString">String</option>
+                      <option value="valueBoolean">Boolean</option>
+                      <option value="valueCodeableConcept">Codeable Concept</option>
+                    </select>
+                  </div>
+
+                  @if (resourceForm()!.get('valueType')?.value === 'valueQuantity') {
+                    <div class="value-quantity-group">
+                      <div class="form-group">
+                        <label for="valueQuantityValue">Value *</label>
+                        <input id="valueQuantityValue" type="number" formControlName="valueQuantityValue" class="form-control" placeholder="70" />
+                      </div>
+                      <div class="form-group">
+                        <label for="valueQuantityUnit">Unit</label>
+                        <input id="valueQuantityUnit" formControlName="valueQuantityUnit" class="form-control" placeholder="kg" />
+                      </div>
+                    </div>
+                  }
+
+                  @if (resourceForm()!.get('valueType')?.value === 'valueString') {
+                    <div class="form-group">
+                      <label for="valueStringValue">String Value</label>
+                      <input id="valueStringValue" formControlName="valueStringValue" class="form-control" placeholder="Enter text value" />
+                    </div>
+                  }
+                </div>
+
+                <!-- Patient Reference -->
+                <div class="form-section-group">
+                  <h3>Patient Reference</h3>
+                  
+                  <div class="form-group">
+                    <label for="patientReference">Patient ID *</label>
+                    <input id="patientReference" formControlName="patientReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Procedure') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="preparation">Preparation</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="not-done">Not Done</option>
+                      <option value="on-hold">On Hold</option>
+                      <option value="stopped">Stopped</option>
+                      <option value="completed">Completed</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subjectReference">Patient Reference *</label>
+                    <input id="subjectReference" formControlName="subjectReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+                </div>
+
+                <!-- Procedure Code -->
+                <div class="form-section-group">
+                  <h3>Procedure Code</h3>
+                  
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://www.ama-assn.org/go/cpt">CPT</option>
+                      <option value="http://hl7.org/fhir/sid/icd-10-pcs">ICD-10-PCS</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 80146002" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Appendectomy" />
+                  </div>
+                </div>
+
+                <!-- Timing -->
+                <div class="form-section-group">
+                  <h3>Timing</h3>
+                  
+                  <div class="form-group">
+                    <label for="performedDateTime">Performed Date/Time</label>
+                    <input id="performedDateTime" type="datetime-local" formControlName="performedDateTime" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performedPeriodStart">Period Start</label>
+                    <input id="performedPeriodStart" type="datetime-local" formControlName="performedPeriodStart" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performedPeriodEnd">Period End</label>
+                    <input id="performedPeriodEnd" type="datetime-local" formControlName="performedPeriodEnd" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performedString">Performed (Text)</label>
+                    <input id="performedString" formControlName="performedString" class="form-control" placeholder="e.g., During morning surgery" />
+                  </div>
+                </div>
+
+                <!-- Performer -->
+                <div class="form-section-group">
+                  <h3>Performer</h3>
+                  
+                  <div class="form-group">
+                    <label for="performerReference">Performer Reference</label>
+                    <input id="performerReference" formControlName="performerReference" class="form-control" placeholder="Practitioner/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performerRole">Performer Role</label>
+                    <input id="performerRole" formControlName="performerRole" class="form-control" placeholder="e.g., primary-surgeon" />
+                  </div>
+                </div>
+
+                <!-- Location and Context -->
+                <div class="form-section-group">
+                  <h3>Location and Context</h3>
+                  
+                  <div class="form-group">
+                    <label for="locationReference">Location Reference</label>
+                    <input id="locationReference" formControlName="locationReference" class="form-control" placeholder="Location/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="reasonCodeValue">Reason Code</label>
+                    <input id="reasonCodeValue" formControlName="reasonCodeValue" class="form-control" placeholder="e.g., 74400008" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="reasonCodeDisplay">Reason Display</label>
+                    <input id="reasonCodeDisplay" formControlName="reasonCodeDisplay" class="form-control" placeholder="e.g., Appendicitis" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="reasonReference">Reason Reference</label>
+                    <input id="reasonReference" formControlName="reasonReference" class="form-control" placeholder="Condition/123" />
+                  </div>
+                </div>
+
+                <!-- Body Site -->
+                <div class="form-section-group">
+                  <h3>Body Site</h3>
+                  
+                  <div class="form-group">
+                    <label for="bodySiteCode">Body Site Code</label>
+                    <input id="bodySiteCode" formControlName="bodySiteCode" class="form-control" placeholder="e.g., 66754008" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="bodySiteDisplay">Body Site Display</label>
+                    <input id="bodySiteDisplay" formControlName="bodySiteDisplay" class="form-control" placeholder="e.g., Appendix" />
+                  </div>
+                </div>
+
+                <!-- Outcome -->
+                <div class="form-section-group">
+                  <h3>Outcome</h3>
+                  
+                  <div class="form-group">
+                    <label for="outcomeCode">Outcome Code</label>
+                    <input id="outcomeCode" formControlName="outcomeCode" class="form-control" placeholder="e.g., 385669000" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="outcomeDisplay">Outcome Display</label>
+                    <input id="outcomeDisplay" formControlName="outcomeDisplay" class="form-control" placeholder="e.g., Successful" />
+                  </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-section-group">
+                  <h3>Notes</h3>
+                  
+                  <div class="form-group">
+                    <label for="notes">Clinical Notes</label>
+                    <textarea id="notes" formControlName="notes" class="form-control" rows="3" placeholder="Additional clinical notes..."></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Condition') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="clinicalStatus">Clinical Status *</label>
+                    <select id="clinicalStatus" formControlName="clinicalStatus" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="recurrence">Recurrence</option>
+                      <option value="relapse">Relapse</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="remission">Remission</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="verificationStatus">Verification Status *</label>
+                    <select id="verificationStatus" formControlName="verificationStatus" class="form-control">
+                      <option value="unconfirmed">Unconfirmed</option>
+                      <option value="provisional">Provisional</option>
+                      <option value="differential">Differential</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="refuted">Refuted</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" formControlName="category" class="form-control">
+                      <option value="problem-list-item">Problem List Item</option>
+                      <option value="encounter-diagnosis">Encounter Diagnosis</option>
+                      <option value="health-concern">Health Concern</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="severity">Severity</label>
+                    <select id="severity" formControlName="severity" class="form-control">
+                      <option value="">Select severity</option>
+                      <option value="mild">Mild</option>
+                      <option value="moderate">Moderate</option>
+                      <option value="severe">Severe</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subjectReference">Patient Reference *</label>
+                    <input id="subjectReference" formControlName="subjectReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+                </div>
+
+                <!-- Condition Code -->
+                <div class="form-section-group">
+                  <h3>Condition Code</h3>
+                  
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://hl7.org/fhir/sid/icd-10-cm">ICD-10-CM</option>
+                      <option value="http://hl7.org/fhir/sid/icd-9-cm">ICD-9-CM</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 38341003" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Hypertensive disorder" />
+                  </div>
+                </div>
+
+                <!-- Onset -->
+                <div class="form-section-group">
+                  <h3>Onset</h3>
+                  
+                  <div class="form-group">
+                    <label for="onsetType">Onset Type</label>
+                    <select id="onsetType" formControlName="onsetType" class="form-control">
+                      <option value="onsetDateTime">Date/Time</option>
+                      <option value="onsetString">Text Description</option>
+                      <option value="onsetAge">Age</option>
+                    </select>
+                  </div>
+
+                  @if (resourceForm()!.get('onsetType')?.value === 'onsetDateTime') {
+                    <div class="form-group">
+                      <label for="onsetDateTime">Onset Date/Time</label>
+                      <input id="onsetDateTime" type="datetime-local" formControlName="onsetDateTime" class="form-control" />
+                    </div>
+                  }
+
+                  @if (resourceForm()!.get('onsetType')?.value === 'onsetString') {
+                    <div class="form-group">
+                      <label for="onsetString">Onset Description</label>
+                      <input id="onsetString" formControlName="onsetString" class="form-control" placeholder="e.g., During childhood" />
+                    </div>
+                  }
+
+                  @if (resourceForm()!.get('onsetType')?.value === 'onsetAge') {
+                    <div class="onset-age-group">
+                      <div class="form-group">
+                        <label for="onsetAgeValue">Age Value</label>
+                        <input id="onsetAgeValue" type="number" formControlName="onsetAgeValue" class="form-control" placeholder="25" />
+                      </div>
+                      <div class="form-group">
+                        <label for="onsetAgeUnit">Age Unit</label>
+                        <select id="onsetAgeUnit" formControlName="onsetAgeUnit" class="form-control">
+                          <option value="years">Years</option>
+                          <option value="months">Months</option>
+                          <option value="weeks">Weeks</option>
+                          <option value="days">Days</option>
+                        </select>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Abatement -->
+                <div class="form-section-group">
+                  <h3>Abatement (Optional)</h3>
+                  
+                  <div class="form-group">
+                    <label for="abatementType">Abatement Type</label>
+                    <select id="abatementType" formControlName="abatementType" class="form-control">
+                      <option value="">None</option>
+                      <option value="abatementDateTime">Date/Time</option>
+                      <option value="abatementString">Text Description</option>
+                      <option value="abatementBoolean">Yes/No</option>
+                    </select>
+                  </div>
+
+                  @if (resourceForm()!.get('abatementType')?.value === 'abatementDateTime') {
+                    <div class="form-group">
+                      <label for="abatementDateTime">Abatement Date/Time</label>
+                      <input id="abatementDateTime" type="datetime-local" formControlName="abatementDateTime" class="form-control" />
+                    </div>
+                  }
+
+                  @if (resourceForm()!.get('abatementType')?.value === 'abatementString') {
+                    <div class="form-group">
+                      <label for="abatementString">Abatement Description</label>
+                      <input id="abatementString" formControlName="abatementString" class="form-control" placeholder="e.g., After treatment" />
+                    </div>
+                  }
+
+                  @if (resourceForm()!.get('abatementType')?.value === 'abatementBoolean') {
+                    <div class="form-group">
+                      <label for="abatementBoolean">Condition Resolved</label>
+                      <select id="abatementBoolean" formControlName="abatementBoolean" class="form-control">
+                        <option value="false">No</option>
+                        <option value="true">Yes</option>
+                      </select>
+                    </div>
+                  }
+                </div>
+
+                <!-- Recording Information -->
+                <div class="form-section-group">
+                  <h3>Recording Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="recordedDate">Recorded Date</label>
+                    <input id="recordedDate" type="datetime-local" formControlName="recordedDate" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="recorderReference">Recorder Reference</label>
+                    <input id="recorderReference" formControlName="recorderReference" class="form-control" placeholder="Practitioner/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="asserterReference">Asserter Reference</label>
+                    <input id="asserterReference" formControlName="asserterReference" class="form-control" placeholder="Practitioner/123" />
+                  </div>
+                </div>
+
+                <!-- Body Site -->
+                <div class="form-section-group">
+                  <h3>Body Site (Optional)</h3>
+                  
+                  <div class="form-group">
+                    <label for="bodySiteCode">Body Site Code</label>
+                    <input id="bodySiteCode" formControlName="bodySiteCode" class="form-control" placeholder="e.g., 80891009" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="bodySiteDisplay">Body Site Display</label>
+                    <input id="bodySiteDisplay" formControlName="bodySiteDisplay" class="form-control" placeholder="e.g., Heart structure" />
+                  </div>
+                </div>
+
+                <!-- Notes -->
+                <div class="form-section-group">
+                  <h3>Notes</h3>
+                  
+                  <div class="form-group">
+                    <label for="notes">Clinical Notes</label>
+                    <textarea id="notes" formControlName="notes" class="form-control" rows="3" placeholder="Additional clinical notes..."></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @default {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>JSON Editor</h3>
+                  <p>Use the JSON editor below to {{ modalService.mode() }} your {{ modalService.resourceType() }} resource:</p>
+                  
+                  <div class="form-group">
+                    <label for="resourceJson">Resource JSON *</label>
+                    <textarea 
+                      id="resourceJson" 
+                      formControlName="resourceJson" 
+                      class="form-control json-editor"
+                      rows="20"
+                      placeholder="Enter your {{ modalService.resourceType() }} JSON here..."
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </form>
+      }
+
+      <!-- Preview Section -->
+      @if (previewJson()) {
+        <div class="preview-section">
+          <h3>Resource Preview</h3>
+          <pre class="preview-json">{{ previewJson() }}</pre>
+        </div>
+      }
+    </div>
+
+    <div class="modal-footer">
+      <div class="form-actions">
+        <button 
+          type="button"
+          (click)="previewResource()"
+          [disabled]="!resourceForm() || resourceForm()!.invalid"
+          class="btn-secondary"
+        >
+          👁️ Preview JSON
+        </button>
+        
+        <button 
+          type="button"
+          (click)="onSubmit()"
+          [disabled]="isLoading() || !resourceForm() || resourceForm()!.invalid"
+          class="btn-primary"
+        >
+          @if (isLoading()) {
+            <span class="loading-spinner"></span>
+            @if (modalService.mode() === 'create') {
+              Creating...
+            } @else {
+              Updating...
+            }
+          } @else {
+            @if (modalService.mode() === 'create') {
+              ✅ Create {{ modalService.resourceType() }}
+            } @else {
+              💾 Update {{ modalService.resourceType() }}
+            }
+          }
+        </button>
+        
+        <button type="button" (click)="onCancel()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

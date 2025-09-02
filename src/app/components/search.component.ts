@@ -1,12 +1,14 @@
 import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { FhirService, FhirResource, FhirBundle, FhirSearchParams } from '../services/fhir.service';
+import { FhirService, FhirResource, FhirBundle, FhirBundleLink, FhirSearchParams } from '../services/fhir.service';
 import { ResourceViewerComponent } from './resource-viewer.component';
+import { ResourceModalService } from '../services/resource-modal.service';
+import { ResourceFormModalComponent } from './resource-form-modal.component';
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule, ReactiveFormsModule, ResourceViewerComponent],
+  imports: [CommonModule, ReactiveFormsModule, ResourceViewerComponent, ResourceFormModalComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -14,6 +16,7 @@ import { ResourceViewerComponent } from './resource-viewer.component';
 export class SearchComponent {
   private readonly fb = inject(FormBuilder);
   protected readonly fhirService = inject(FhirService);
+  protected readonly modalService = inject(ResourceModalService);
 
   // Signals for reactive state
   protected readonly searchResults = signal<FhirBundle | null>(null);
@@ -337,5 +340,42 @@ export class SearchComponent {
     }
     
     return parts.join(' • ') || 'Coverage details';
+  }
+
+  /**
+   * Open edit modal for a resource
+   */
+  protected editResource(resource: FhirResource): void {
+    this.modalService.openEditModal(resource);
+  }
+
+  /**
+   * Handle resource update
+   */
+  protected onResourceUpdated(updatedResource: FhirResource): void {
+    // Update the resource in search results if it exists
+    const results = this.searchResults();
+    if (results?.entry) {
+      const entryIndex = results.entry.findIndex(entry => 
+        entry.resource?.id === updatedResource.id && 
+        entry.resource?.resourceType === updatedResource.resourceType
+      );
+      
+      if (entryIndex !== -1) {
+        const updatedResults = { ...results };
+        updatedResults.entry = [...results.entry];
+        updatedResults.entry[entryIndex] = {
+          ...updatedResults.entry[entryIndex],
+          resource: updatedResource
+        };
+        this.searchResults.set(updatedResults);
+      }
+    }
+
+    // Update selected resource if it's the same one
+    const selected = this.selectedResource();
+    if (selected?.id === updatedResource.id && selected?.resourceType === updatedResource.resourceType) {
+      this.selectedResource.set(updatedResource);
+    }
   }
 }

@@ -1,7 +1,7 @@
-<div class="create-container">
+﻿<div class="create-container">
   <div class="create-header">
     <h1>Create New FHIR Resource</h1>
-    <p>Create and submit new FHIR resources to the server</p>
+    <p>Select a resource type to create and submit new FHIR resources to the server</p>
   </div>
 
   <!-- Resource Type Selection -->
@@ -11,7 +11,6 @@
       @for (type of supportedResourceTypes(); track type.value) {
         <div 
           class="resource-type-card"
-          [class.selected]="selectedResourceType() === type.value"
           (click)="selectResourceType(type.value)"
         >
           <div class="resource-type-icon">{{ type.icon }}</div>
@@ -22,255 +21,11 @@
     </div>
   </div>
 
-  <!-- Dynamic Form -->
-  @if (selectedResourceType() && resourceForm()) {
-    <div class="form-section">
-      <div class="form-header">
-        <h2>{{ selectedResourceType() }} Details</h2>
-        <div class="form-actions-header">
-          <button 
-            (click)="previewResource()"
-            [disabled]="resourceForm()!.invalid"
-            class="btn-secondary"
-          >
-            👁️ Preview JSON
-          </button>
-          <button 
-            (click)="resetForm()"
-            class="btn-secondary"
-          >
-            🔄 Reset Form
-          </button>
-        </div>
-      </div>
-
-      <form [formGroup]="resourceForm()!" (ngSubmit)="onSubmit()" class="resource-form">
-        @switch (selectedResourceType()) {
-          @case ('Patient') {
-            <div class="form-grid">
-              <!-- Basic Information -->
-              <div class="form-section-group">
-                <h3>Basic Information</h3>
-                
-                <div class="form-group">
-                  <label for="identifier">Identifier *</label>
-                  <input id="identifier" formControlName="identifier" class="form-control" placeholder="Patient identifier" />
-                  @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
-                    <div class="form-error">Identifier is required</div>
-                  }
-                </div>
-
-                <div class="form-group">
-                  <label for="active">Active Status</label>
-                  <select id="active" formControlName="active" class="form-control">
-                    <option value="true">Active</option>
-                    <option value="false">Inactive</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- Name Information -->
-              <div class="form-section-group">
-                <h3>Name Information</h3>
-                
-                <div class="form-group">
-                  <label for="family">Family Name *</label>
-                  <input id="family" formControlName="family" class="form-control" placeholder="Last name" />
-                  @if (resourceForm()!.get('family')?.errors?.['required'] && resourceForm()!.get('family')?.touched) {
-                    <div class="form-error">Family name is required</div>
-                  }
-                </div>
-
-                <div class="form-group">
-                  <label for="given">Given Names *</label>
-                  <input id="given" formControlName="given" class="form-control" placeholder="First and middle names" />
-                  @if (resourceForm()!.get('given')?.errors?.['required'] && resourceForm()!.get('given')?.touched) {
-                    <div class="form-error">Given name is required</div>
-                  }
-                </div>
-              </div>
-
-              <!-- Demographics -->
-              <div class="form-section-group">
-                <h3>Demographics</h3>
-                
-                <div class="form-group">
-                  <label for="gender">Gender</label>
-                  <select id="gender" formControlName="gender" class="form-control">
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="other">Other</option>
-                    <option value="unknown">Unknown</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="birthDate">Birth Date</label>
-                  <input id="birthDate" type="date" formControlName="birthDate" class="form-control" />
-                </div>
-              </div>
-
-              <!-- Contact Information -->
-              <div class="form-section-group">
-                <h3>Contact Information</h3>
-                
-                <div class="form-group">
-                  <label for="phone">Phone Number</label>
-                  <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="+1234567890" />
-                </div>
-
-                <div class="form-group">
-                  <label for="email">Email Address</label>
-                  <input id="email" type="email" formControlName="email" class="form-control" placeholder="patient@example.com" />
-                </div>
-              </div>
-            </div>
-          }
-
-          @case ('Observation') {
-            <div class="form-grid">
-              <!-- Basic Information -->
-              <div class="form-section-group">
-                <h3>Basic Information</h3>
-                
-                <div class="form-group">
-                  <label for="status">Status *</label>
-                  <select id="status" formControlName="status" class="form-control">
-                    <option value="final">Final</option>
-                    <option value="preliminary">Preliminary</option>
-                    <option value="amended">Amended</option>
-                    <option value="corrected">Corrected</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="effectiveDateTime">Effective Date/Time *</label>
-                  <input id="effectiveDateTime" type="datetime-local" formControlName="effectiveDateTime" class="form-control" />
-                </div>
-              </div>
-
-              <!-- Code Information -->
-              <div class="form-section-group">
-                <h3>Observation Code</h3>
-                
-                <div class="form-group">
-                  <label for="codeSystem">Code System</label>
-                  <select id="codeSystem" formControlName="codeSystem" class="form-control">
-                    <option value="http://loinc.org">LOINC</option>
-                    <option value="http://snomed.info/sct">SNOMED CT</option>
-                    <option value="http://hl7.org/fhir/observation-category">Observation Category</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label for="codeValue">Code Value *</label>
-                  <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 29463-7" />
-                </div>
-
-                <div class="form-group">
-                  <label for="codeDisplay">Code Display *</label>
-                  <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Body weight" />
-                </div>
-              </div>
-
-              <!-- Value Information -->
-              <div class="form-section-group">
-                <h3>Value</h3>
-                
-                <div class="form-group">
-                  <label for="valueType">Value Type</label>
-                  <select id="valueType" formControlName="valueType" class="form-control">
-                    <option value="valueQuantity">Quantity</option>
-                    <option value="valueString">String</option>
-                    <option value="valueBoolean">Boolean</option>
-                    <option value="valueCodeableConcept">Codeable Concept</option>
-                  </select>
-                </div>
-
-                @if (resourceForm()!.get('valueType')?.value === 'valueQuantity') {
-                  <div class="value-quantity-group">
-                    <div class="form-group">
-                      <label for="valueQuantityValue">Value *</label>
-                      <input id="valueQuantityValue" type="number" formControlName="valueQuantityValue" class="form-control" placeholder="70" />
-                    </div>
-                    <div class="form-group">
-                      <label for="valueQuantityUnit">Unit</label>
-                      <input id="valueQuantityUnit" formControlName="valueQuantityUnit" class="form-control" placeholder="kg" />
-                    </div>
-                  </div>
-                }
-
-                @if (resourceForm()!.get('valueType')?.value === 'valueString') {
-                  <div class="form-group">
-                    <label for="valueStringValue">String Value</label>
-                    <input id="valueStringValue" formControlName="valueStringValue" class="form-control" placeholder="Enter text value" />
-                  </div>
-                }
-              </div>
-
-              <!-- Patient Reference -->
-              <div class="form-section-group">
-                <h3>Patient Reference</h3>
-                
-                <div class="form-group">
-                  <label for="patientReference">Patient ID *</label>
-                  <input id="patientReference" formControlName="patientReference" class="form-control" placeholder="Patient/123" />
-                </div>
-              </div>
-            </div>
-          }
-
-          @default {
-            <div class="form-grid">
-              <div class="form-section-group">
-                <h3>JSON Editor</h3>
-                <p>Use the JSON editor below to create your {{ selectedResourceType() }} resource:</p>
-                
-                <div class="form-group">
-                  <label for="resourceJson">Resource JSON *</label>
-                  <textarea 
-                    id="resourceJson" 
-                    formControlName="resourceJson" 
-                    class="form-control json-editor"
-                    rows="20"
-                    placeholder="Enter your {{ selectedResourceType() }} JSON here..."
-                  ></textarea>
-                </div>
-              </div>
-            </div>
-          }
-        }
-
-        <!-- Form Actions -->
-        <div class="form-actions">
-          <button 
-            type="submit" 
-            [disabled]="fhirService.isLoading() || resourceForm()!.invalid"
-            class="btn-primary"
-          >
-            @if (fhirService.isLoading()) {
-              <span class="loading-spinner"></span>
-              Creating...
-            } @else {
-              ✅ Create {{ selectedResourceType() }}
-            }
-          </button>
-          
-          <button type="button" (click)="saveDraft()" class="btn-secondary">
-            💾 Save Draft
-          </button>
-        </div>
-      </form>
-    </div>
-  }
-
   <!-- Success Message -->
   @if (createdResource()) {
     <div class="success-banner">
       <div class="success-content">
-        <strong>Success!</strong> {{ selectedResourceType() }} created successfully.
+        <strong>Success!</strong> {{ createdResource()!.resourceType }} created successfully.
         <div class="success-actions">
           <button (click)="viewCreatedResource()" class="btn-small">View Resource</button>
           <button (click)="createAnother()" class="btn-small secondary">Create Another</button>
@@ -289,22 +44,6 @@
     </div>
   }
 
-  <!-- Preview Modal -->
-  @if (previewJson()) {
-    <div class="modal-overlay" (click)="closePreview()">
-      <div class="modal-content preview-modal" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>{{ selectedResourceType() }} Preview</h2>
-          <button (click)="closePreview()" class="modal-close">×</button>
-        </div>
-        <div class="modal-body">
-          <pre class="preview-json">{{ previewJson() }}</pre>
-        </div>
-        <div class="modal-footer">
-          <button (click)="copyToClipboard()" class="btn-secondary">📋 Copy JSON</button>
-          <button (click)="closePreview()" class="btn-primary">Close</button>
-        </div>
-      </div>
-    </div>
-  }
+  <!-- Resource Form Modal -->
+  <app-resource-form-modal (resourceCreated)="onResourceCreated($event)"></app-resource-form-modal>
 </div>
