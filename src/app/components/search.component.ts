@@ -1,6 +1,8 @@
 import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs/operators';
 import { FhirService, FhirResource, FhirBundle, FhirBundleLink, FhirSearchParams } from '../services/fhir.service';
 import { ResourceViewerComponent } from './resource-viewer.component';
 import { ResourceModalService } from '../services/resource-modal.service';
@@ -15,6 +17,7 @@ import { ResourceFormModalComponent } from './resource-form-modal.component';
 })
 export class SearchComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   protected readonly fhirService = inject(FhirService);
   protected readonly modalService = inject(ResourceModalService);
 
@@ -90,6 +93,15 @@ export class SearchComponent {
     this.searchForm.get('resourceType')?.valueChanges.subscribe(() => {
       this.searchForm.patchValue({ searchField: this.availableSearchFields()[0]?.value });
     });
+
+    // Close modal on navigation
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        if (this.selectedResource()) {
+          this.closeModal();
+        }
+      });
   }
 
   protected async onSearch(): Promise<void> {

@@ -3,6 +3,7 @@ import { RouterOutlet, Router, NavigationEnd, RouterLink, RouterLinkActive } fro
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { FhirService } from './services/fhir.service';
+import { ResourceModalService } from './services/resource-modal.service';
 import { SplashScreenComponent } from './components/splash-screen.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { SplashScreenComponent } from './components/splash-screen.component';
 export class App {
   private readonly router = inject(Router);
   private readonly fhirService = inject(FhirService);
+  private readonly modalService = inject(ResourceModalService);
 
   // Signals for reactive state management
   protected readonly title = signal('FHIR-PIT');
@@ -46,6 +48,11 @@ export class App {
       .subscribe((event: NavigationEnd) => {
         this.currentRoute.set(event.url);
         this.isMobileMenuOpen.set(false); // Close mobile menu on navigation
+        
+        // Close modal dialogs on navigation
+        if (this.modalService.isOpen()) {
+          this.modalService.closeModal();
+        }
       });
 
     // Test initial connection
