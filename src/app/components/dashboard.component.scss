@@ -7,6 +7,25 @@
   min-height: calc(100vh - 200px); /* Account for header and footer */
 }
 
+/* Clickable card styles */
+.clickable-card {
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  &:active {
+    transform: translateY(-1px);
+    transition: transform 0.1s ease;
+  }
+}
+
 /* Stats Grid */
 .stats-grid {
   display: grid;

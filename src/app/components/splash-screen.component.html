@@ -1,0 +1,48 @@
+<div class="splash-screen" 
+     *ngIf="isVisible()" 
+     (click)="onSplashClick()" 
+     (keydown)="onKeyDown($event)"
+     tabindex="0">
+  <div class="splash-content">
+    <!-- Logo Section -->
+    <div class="logo-section" *ngIf="showContent()">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <img src="/fhir-pit-logo.jpg" 
+               alt="FHIR-PIT Logo" 
+               class="logo-image"
+               loading="eager">
+        </div>
+      </div>
+    </div>
+
+    <!-- Continue Button Section -->
+    <div class="continue-section" *ngIf="showContent()">
+      <button mat-raised-button 
+              color="primary" 
+              class="continue-button"
+              (click)="onContinueClick()">
+        <span class="button-text">Continue to FHIR-PIT</span>
+        <svg class="button-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+        </svg>
+      </button>
+      <p class="continue-hint">Click anywhere or press any key to continue</p>
+    </div>
+
+    <!-- Footer -->
+    <div class="splash-footer" *ngIf="showContent()">
+      <p class="version-text">v2.0 • Built with Angular & FHIR R4</p>
+      <p class="copyright-text">&copy; {{ currentYear }} FHIR-PIT</p>
+    </div>
+  </div>
+
+  <!-- Background Pattern -->
+  <div class="background-pattern">
+    <div class="pattern-grid">
+      <div class="pattern-dot" *ngFor="let dot of [].constructor(50); let i = index" 
+           [style.animation-delay.ms]="i * 100">
+      </div>
+    </div>
+  </div>
+</div>

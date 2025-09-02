@@ -1,6 +1,6 @@
 import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { FhirService } from '../services/fhir.service';
 
 @Component({
@@ -12,11 +12,16 @@ import { FhirService } from '../services/fhir.service';
 })
 export class DashboardComponent {
   protected readonly fhirService = inject(FhirService);
+  private readonly router = inject(Router);
 
   protected readonly serverStatus = computed(() => {
     const config = this.fhirService.config();
     return config.serverUrl ? `Connected to ${config.serverName}` : 'Not connected';
   });
+
+  navigateTo(route: string): void {
+    this.router.navigate([route]);
+  }
 
   protected readonly supportedResources = signal([
     {

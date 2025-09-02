@@ -3,10 +3,11 @@ import { RouterOutlet, Router, NavigationEnd, RouterLink, RouterLinkActive } fro
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { FhirService } from './services/fhir.service';
+import { SplashScreenComponent } from './components/splash-screen.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive],
+  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive, SplashScreenComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,6 +21,7 @@ export class App {
   protected readonly currentRoute = signal<string>('/');
   protected readonly isMobileMenuOpen = signal<boolean>(false);
   protected readonly isConnected = signal<boolean>(false);
+  protected readonly showSplash = signal<boolean>(true);
 
   // Computed values
   protected readonly serverStatus = computed(() => 
@@ -48,6 +50,8 @@ export class App {
 
     // Test initial connection
     this.testConnection();
+
+    // Splash screen now waits for button click - no automatic timer
   }
 
   private async testConnection(): Promise<void> {
