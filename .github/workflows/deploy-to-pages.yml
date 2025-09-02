@@ -39,13 +39,20 @@ jobs:
       - name: Build Angular app for GitHub Pages
         run: npm run build -- --configuration=github-pages
 
+      - name: List build output (debug)
+        run: |
+          echo "Contents of dist directory:"
+          find ./dist -type f -name "*.html" -o -name "*.js" -o -name "*.css" | head -10
+          echo "index.html location:"
+          find ./dist -name "index.html"
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
       - name: Upload build artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist/fhir-pit'
+          path: './dist/fhir-pit/browser'
 
   # Test job (runs in parallel with build, failures don't block deployment)
   test:
