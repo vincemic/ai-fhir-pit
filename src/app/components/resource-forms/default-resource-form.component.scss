@@ -1,0 +1,242 @@
+.default-resource-form {
+  .form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-section {
+    background: var(--vscode-bg-secondary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+
+    .section-title {
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--vscode-border-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--vscode-text-primary);
+    }
+  }
+
+  .resource-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      label {
+        font-weight: 500;
+        color: var(--vscode-text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .meta-value {
+        color: var(--vscode-text-primary);
+        font-size: 1rem;
+        font-family: var(--font-family-mono);
+      }
+
+      .profile-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        .profile-badge {
+          background: var(--vscode-info);
+          color: var(--vscode-bg-primary);
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-family: var(--font-family-mono);
+          word-break: break-all;
+        }
+      }
+    }
+  }
+
+  .content-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: var(--vscode-warning);
+    border: 1px solid var(--vscode-warning);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+
+    .warning-icon {
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .warning-text {
+      flex: 1;
+
+      p {
+        margin: 0 0 0.5rem 0;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      strong {
+        color: var(--vscode-bg-primary);
+      }
+    }
+  }
+
+  .json-container {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 8px;
+    overflow: hidden;
+
+    .json-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--vscode-bg-secondary);
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--vscode-border-primary);
+
+      .json-title {
+        font-weight: 500;
+        color: var(--vscode-text-primary);
+      }
+
+      .copy-button {
+        background: var(--vscode-text-muted);
+        color: var(--vscode-text-inverse);
+        border: none;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background: var(--vscode-bg-elevated);
+        }
+
+        &:active {
+          background: var(--vscode-bg-tertiary);
+        }
+      }
+    }
+
+    .json-content {
+      background: var(--vscode-bg-primary);
+      padding: 1rem;
+      margin: 0;
+      font-family: var(--font-family-mono);
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: var(--vscode-text-primary);
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 400px;
+      overflow-y: auto;
+      border: none;
+
+      // JSON syntax highlighting (basic)
+      .json-string {
+        color: var(--vscode-error);
+      }
+
+      .json-number {
+        color: var(--vscode-info);
+      }
+
+      .json-boolean {
+        color: var(--vscode-error);
+      }
+
+      .json-null {
+        color: var(--fhir-condition);
+      }
+
+      .json-key {
+        color: var(--vscode-success);
+      }
+    }
+  }
+
+  .key-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+
+    .key-field {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 6px;
+      padding: 1rem;
+
+      .field-label {
+        display: block;
+        font-weight: 500;
+        color: var(--vscode-text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+      }
+
+      .field-value {
+        .reference-value {
+          font-family: var(--font-family-mono);
+          color: var(--vscode-accent-primary);
+          font-size: 0.9rem;
+          word-break: break-all;
+        }
+
+        .code-value {
+          background: var(--vscode-info);
+          color: var(--vscode-bg-primary);
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          display: inline-block;
+        }
+
+        .date-value {
+          color: var(--vscode-success);
+          font-weight: 500;
+        }
+
+        .text-value {
+          color: var(--vscode-text-primary);
+          word-break: break-word;
+        }
+      }
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .resource-meta {
+      grid-template-columns: 1fr;
+    }
+
+    .key-fields {
+      grid-template-columns: 1fr;
+    }
+
+    .json-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+  }
+}

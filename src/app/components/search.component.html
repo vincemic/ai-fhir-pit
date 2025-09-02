@@ -1,0 +1,213 @@
+<div class="search-container">
+  <!-- Search Form -->
+  <div class="search-form-section">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="search-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="resourceType">Resource Type</label>
+          <select id="resourceType" formControlName="resourceType" class="form-control">
+            @for (type of resourceTypes(); track type) {
+              <option [value]="type">{{ type }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="searchField">Search Field</label>
+          <select id="searchField" formControlName="searchField" class="form-control">
+            @for (field of availableSearchFields(); track field.value) {
+              <option [value]="field.value">{{ field.label }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="searchTerm">Search Term</label>
+          <input 
+            id="searchTerm" 
+            type="text" 
+            formControlName="searchTerm" 
+            class="form-control"
+            placeholder="Enter search term..."
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="count">Results per page</label>
+          <select id="count" formControlName="count" class="form-control">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="fhirService.isLoading() || searchForm.invalid" class="btn-primary">
+          @if (fhirService.isLoading()) {
+            <span class="loading-spinner"></span>
+            Searching...
+          } @else {
+            🔍 Search Resources
+          }
+        </button>
+        <button type="button" (click)="clearSearch()" class="btn-secondary">
+          Clear
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error Display -->
+  @if (fhirService.lastError()) {
+    <div class="error-banner">
+      <div class="error-content">
+        <strong>Error:</strong> {{ fhirService.lastError() }}
+        <button (click)="fhirService.clearError()" class="error-close">×</button>
+      </div>
+    </div>
+  }
+
+  <!-- Search Results -->
+  @if (searchResults()) {
+    <div class="results-section">
+      <div class="results-header">
+        <h2>Search Results</h2>
+        @if (searchResults()?.total !== undefined) {
+          <span class="results-count">{{ searchResults()?.total }} total results</span>
+        }
+      </div>
+
+      @if (searchResults()?.entry && searchResults()?.entry!.length > 0) {
+        <div class="results-grid">
+          @for (entry of searchResults()?.entry; track entry.resource?.id) {
+            <div class="resource-card" (click)="selectResource(entry.resource!)">
+              <div class="resource-header">
+                <span class="resource-type-badge" [class]="'fhir-resource-badge ' + entry.resource?.resourceType?.toLowerCase()">
+                  {{ entry.resource?.resourceType }}
+                </span>
+                <span class="resource-id">ID: {{ entry.resource?.id }}</span>
+              </div>
+              
+              <div class="resource-content">
+                <h3 class="resource-title">{{ getResourceTitle(entry.resource!) }}</h3>
+                <p class="resource-description">{{ getResourceDescription(entry.resource!) }}</p>
+                
+                @if (getLastUpdated(entry.resource!)) {
+                  <div class="resource-meta">
+                    <span class="meta-label">Last Updated:</span>
+                    <span class="meta-value">{{ formatDate(getLastUpdated(entry.resource!)!) }}</span>
+                  </div>
+                }
+              </div>
+
+              <div class="resource-actions">
+                <button (click)="viewResource(entry.resource!); $event.stopPropagation()" 
+                        class="btn-small"
+                        [disabled]="fhirService.isLoading()">
+                  @if (fhirService.isLoading()) {
+                    <span class="loading-spinner"></span>
+                  } @else {
+                    View Details
+                  }
+                </button>
+                @if (hasReferences(entry.resource!)) {
+                  <button (click)="showReferences(entry.resource!); $event.stopPropagation()" 
+                          class="btn-small secondary"
+                          [disabled]="fhirService.isLoading()">
+                    @if (fhirService.isLoading()) {
+                      <span class="loading-spinner"></span>
+                    } @else {
+                      References ({{ countReferences(entry.resource!) }})
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- Pagination -->
+        @if (searchResults()?.link && searchResults()!.link!.length > 0) {
+          <div class="pagination-section">
+            <div class="pagination">
+              @for (link of searchResults()?.link; track link.relation) {
+                <button 
+                  (click)="followLink(link.url)"
+                  [disabled]="fhirService.isLoading()"
+                  class="pagination-btn"
+                  [class.active]="link.relation === 'self'"
+                  [title]="getPaginationLabel(link.relation)"
+                >
+                  @if (fhirService.isLoading()) {
+                    <span class="loading-spinner"></span>
+                  } @else {
+                    {{ getPaginationLabel(link.relation) }}
+                  }
+                </button>
+              }
+            </div>
+            @if (getCurrentPageInfo()) {
+              <div class="pagination-info">
+                {{ getCurrentPageInfo() }}
+              </div>
+            }
+          </div>
+        }
+      } @else {
+        <div class="no-results">
+          <div class="no-results-icon">🔍</div>
+          <h3>No results found</h3>
+          <p>Try adjusting your search criteria or search terms.</p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Selected Resource Details Modal -->
+  @if (selectedResource()) {
+    <div class="modal-overlay" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>{{ selectedResource()?.resourceType }} Details</h2>
+          <button (click)="closeModal()" class="modal-close">×</button>
+        </div>
+        <div class="modal-body">
+          <app-resource-viewer 
+            [resource]="selectedResource()"
+            [readonly]="true">
+          </app-resource-viewer>
+          
+          @if (referencedResources().length > 0 || isLoadingReferences()) {
+            <div class="referenced-resources-section">
+              <h3>Referenced Resources</h3>
+              @if (isLoadingReferences()) {
+                <div class="loading-indicator">
+                  <span class="loading-spinner"></span>
+                  Loading references...
+                </div>
+              } @else {
+                <div class="referenced-resources">
+                  @for (refResource of referencedResources(); track refResource.id) {
+                    <div class="referenced-resource-card">
+                      <div class="ref-header">
+                        <span class="ref-type">{{ refResource.resourceType }}</span>
+                        <span class="ref-id">{{ refResource.id }}</span>
+                      </div>
+                      <div class="ref-title">{{ getResourceTitle(refResource) }}</div>
+                      <div class="ref-description">{{ getResourceDescription(refResource) }}</div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button (click)="closeModal()" class="btn-secondary">Close</button>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,401 @@
+.observation-form {
+  .form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-section {
+    background: var(--vscode-bg-secondary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+
+    .section-title {
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--vscode-border-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--vscode-text-primary);
+    }
+
+    h4 {
+      margin: 1rem 0 0.75rem 0;
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--vscode-text-secondary);
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    align-items: start;
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .form-label {
+      font-weight: 500;
+      color: var(--vscode-text-secondary);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .field-value {
+      color: var(--vscode-text-primary);
+      font-size: 1rem;
+
+      &.reference {
+        font-family: var(--font-family-mono);
+        color: var(--vscode-accent-primary);
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .no-data {
+    color: var(--vscode-text-muted);
+    font-style: italic;
+  }
+
+  // Badge styles
+  .badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0.25rem 0.25rem 0;
+
+    // Status badges
+    &.status-final {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-success);
+    }
+
+    &.status-preliminary {
+      background: var(--vscode-warning);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-warning);
+    }
+
+    &.status-registered {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-info);
+    }
+
+    &.status-cancelled {
+      background: var(--vscode-error);
+      color: var(--vscode-text-inverse);
+      border: 1px solid var(--vscode-error);
+    }
+
+    &.status-amended {
+      background: var(--vscode-text-muted);
+      color: var(--vscode-text-primary);
+      border: 1px solid var(--vscode-text-muted);
+    }
+
+    &.status-corrected {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-info);
+    }
+
+    &.status-entered-in-error {
+      background: var(--vscode-error);
+      color: var(--vscode-text-inverse);
+      border: 1px solid var(--vscode-error);
+    }
+
+    &.status-unknown {
+      background: var(--vscode-text-muted);
+      color: var(--vscode-text-primary);
+      border: 1px solid var(--vscode-text-muted);
+    }
+
+    // Category badges
+    &.category {
+      background: var(--fhir-observation);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--fhir-observation);
+    }
+
+    // Value badges
+    &.positive {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-success);
+    }
+
+    &.negative {
+      background: var(--vscode-error);
+      color: var(--vscode-text-inverse);
+      border: 1px solid var(--vscode-error);
+    }
+
+    &.absent {
+      background: var(--vscode-text-muted);
+      color: var(--vscode-text-primary);
+      border: 1px solid var(--vscode-text-muted);
+    }
+
+    // Interpretation badges
+    &.interpretation {
+      background: var(--vscode-warning);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-warning);
+    }
+
+    // Range type badges
+    &.range-type {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+      border: 1px solid var(--vscode-info);
+    }
+  }
+
+  // Code display
+  .code-display {
+    .code-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      color: var(--vscode-text-primary);
+    }
+
+    .code-details {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 6px;
+      padding: 0.75rem;
+
+      .coding-entry {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.5rem;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+
+        .code-value {
+          font-family: var(--font-family-mono);
+          font-weight: 600;
+          color: var(--vscode-accent-primary);
+        }
+
+        .code-system {
+          font-size: 0.8rem;
+          color: var(--vscode-text-secondary);
+          font-family: var(--font-family-mono);
+        }
+      }
+    }
+  }
+
+  // Value section
+  .value-section {
+    .observation-value {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 8px;
+      padding: 1.5rem;
+
+      .value-display {
+        margin-bottom: 1rem;
+
+        .quantity-value {
+          display: flex;
+          align-items: baseline;
+          gap: 0.5rem;
+          font-size: 1.5rem;
+
+          .value {
+            font-weight: 600;
+            color: var(--vscode-accent-primary);
+          }
+
+          .unit {
+            font-size: 1.1rem;
+            color: var(--vscode-text-secondary);
+          }
+
+          .code-detail {
+            font-size: 0.9rem;
+            color: var(--vscode-text-muted);
+            font-family: var(--font-family-mono);
+          }
+        }
+
+        .codeable-value {
+          font-size: 1.2rem;
+          font-weight: 500;
+          color: var(--vscode-text-primary);
+        }
+
+        .string-value {
+          font-size: 1.2rem;
+          color: var(--vscode-text-primary);
+        }
+
+        .boolean-value {
+          font-size: 1.2rem;
+        }
+
+        .datetime-value {
+          font-size: 1.1rem;
+          color: var(--vscode-text-primary);
+        }
+
+        .period-value,
+        .range-value {
+          font-size: 1.1rem;
+          color: var(--vscode-text-primary);
+        }
+      }
+
+      .reference-ranges {
+        border-top: 1px solid var(--vscode-border-primary);
+        padding-top: 1rem;
+
+        h4 {
+          margin-top: 0;
+        }
+
+        .reference-range {
+          background: var(--vscode-bg-secondary);
+          border: 1px solid var(--vscode-border-secondary);
+          border-radius: 6px;
+          padding: 0.75rem;
+          margin-bottom: 0.5rem;
+
+          .range-values {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+
+            .low,
+            .high {
+              font-weight: 500;
+            }
+
+            .separator {
+              color: var(--vscode-text-secondary);
+            }
+          }
+
+          .range-text {
+            color: var(--vscode-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+          }
+        }
+      }
+    }
+
+    .absent-data {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+
+      .reason {
+        margin-left: 0.5rem;
+        color: var(--vscode-text-secondary);
+      }
+    }
+
+    .no-value {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 8px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+  }
+
+  // Interpretations
+  .interpretations {
+    margin-bottom: 1rem;
+  }
+
+  // Notes
+  .notes {
+    .note-entry {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-primary);
+      border-radius: 6px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+
+      .note-text {
+        margin-bottom: 0.5rem;
+        line-height: 1.5;
+      }
+
+      .note-meta {
+        display: flex;
+        gap: 1rem;
+        font-size: 0.8rem;
+        color: var(--vscode-text-secondary);
+
+        .author {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  // Performers
+  .performer-entry {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+
+    .performer-display {
+      margin-left: 1rem;
+      color: var(--vscode-text-secondary);
+    }
+  }
+
+  // Components
+  .component-entry {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+
+    .component-code {
+      margin-bottom: 0.5rem;
+      color: var(--vscode-text-primary);
+    }
+
+    .component-value {
+      font-weight: 500;
+      color: var(--vscode-accent-primary);
+    }
+  }
+}

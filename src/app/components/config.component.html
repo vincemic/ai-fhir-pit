@@ -1,0 +1,331 @@
+<div class="config-container">
+  <div class="config-header">
+    <h1>FHIR Server Configuration</h1>
+    <p>Configure and test connections to FHIR servers</p>
+  </div>
+
+  <!-- Current Server Status -->
+  <div class="current-server-section">
+    <div class="status-card">
+      <div class="status-header">
+        <h2>Current Server Status</h2>
+        <div class="server-status" [class]="fhirService.serverStatus()">
+          <span class="status-indicator"></span>
+          <span class="status-text">{{ getStatusText() }}</span>
+        </div>
+      </div>
+      
+      @if (currentServerInfo()) {
+        <div class="server-info">
+          <div class="info-grid">
+            <div class="info-item">
+              <label>Server URL</label>
+              <span class="server-url">{{ currentServerInfo()?.url }}</span>
+            </div>
+            <div class="info-item">
+              <label>Server Name</label>
+              <span>{{ getCurrentConfig().serverName }}</span>
+            </div>
+            <div class="info-item">
+              <label>FHIR Version</label>
+              <span>{{ currentServerInfo()?.version || 'Unknown' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Server Software</label>
+              <span>{{ currentServerInfo()?.software || 'Unknown' }}</span>
+            </div>
+            <div class="info-item">
+              <label>Last Tested</label>
+              <span>{{ formatDate(currentServerInfo()?.lastTested) }}</span>
+            </div>
+            <div class="info-item">
+              <label>Timeout</label>
+              <span>{{ getCurrentConfig().timeout }}ms</span>
+            </div>
+          </div>
+          
+          <div class="action-buttons">
+            <button 
+              class="btn btn-primary" 
+              [disabled]="fhirService.isLoading()"
+              (click)="testCurrentConnection()"
+            >
+              @if (fhirService.isLoading()) {
+                <span class="spinner"></span>
+                Testing...
+              } @else {
+                🔄 Test Connection
+              }
+            </button>
+            
+            <button 
+              class="btn btn-secondary" 
+              (click)="resetToDefaults()"
+            >
+              🔄 Reset to Defaults
+            </button>
+            
+            <button 
+              class="btn btn-outline" 
+              (click)="showDefaults()"
+            >
+              📋 Show Defaults
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (editingServer()) {
+        <div class="edit-banner">
+          <span>Editing: {{ editingServer()?.name }}</span>
+          <button (click)="cancelEdit()" class="btn-secondary">Cancel Edit</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Custom Server Configuration -->
+  <div class="custom-server-section">
+    <div class="section-card">
+      <h2>
+        @if (editingServer()) {
+          Edit Server Configuration
+        } @else {
+          Add Custom Server
+        }
+      </h2>
+      
+      <form [formGroup]="configForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="name">Server Name *</label>
+            <input 
+              id="name"
+              type="text" 
+              formControlName="name"
+              placeholder="e.g., My FHIR Server"
+              class="form-control"
+            >
+            @if (configForm.get('name')?.invalid && configForm.get('name')?.touched) {
+              <div class="error-text">Server name is required</div>
+            }
+          </div>
+
+          <div class="form-group">
+            <label for="url">Server URL *</label>
+            <input 
+              id="url"
+              type="url" 
+              formControlName="url"
+              placeholder="https://fhir.example.com/baseR4"
+              class="form-control"
+            >
+            @if (configForm.get('url')?.invalid && configForm.get('url')?.touched) {
+              <div class="error-text">Valid URL is required</div>
+            }
+          </div>
+
+          <div class="form-group full-width">
+            <label for="description">Description</label>
+            <textarea 
+              id="description"
+              formControlName="description"
+              placeholder="Optional description of this FHIR server"
+              class="form-control"
+              rows="2"
+            ></textarea>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input 
+                type="checkbox" 
+                formControlName="isDefault"
+              >
+              <span class="checkmark"></span>
+              Set as default server
+            </label>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn btn-primary"
+            [disabled]="configForm.invalid || testingConnection()"
+          >
+            @if (editingServer()) {
+              Update Server
+            } @else {
+              Add Server
+            }
+          </button>
+          
+          <button 
+            type="button" 
+            class="btn btn-secondary"
+            [disabled]="testingConnection()"
+            (click)="testConnection()"
+          >
+            @if (testingConnection()) {
+              <span class="spinner"></span>
+              Testing...
+            } @else {
+              🧪 Test Connection
+            }
+          </button>
+
+          @if (editingServer()) {
+            <button 
+              type="button" 
+              class="btn btn-outline"
+              (click)="cancelEdit()"
+            >
+              Cancel
+            </button>
+          }
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Saved Servers -->
+  @if (savedServers().length > 0) {
+    <div class="saved-servers-section">
+      <div class="section-card">
+        <h2>Saved Servers</h2>
+        <div class="servers-grid">
+          @for (server of savedServers(); track server.url) {
+            <div class="server-card" [class.default]="server.isDefault">
+              <div class="server-header">
+                <h3>{{ server.name }}</h3>
+                @if (server.isDefault) {
+                  <span class="default-badge">Default</span>
+                }
+              </div>
+              <div class="server-details">
+                <div class="server-url">{{ server.url }}</div>
+                @if (server.description) {
+                  <div class="server-description">{{ server.description }}</div>
+                }
+              </div>
+              <div class="server-actions">
+                <button 
+                  class="btn btn-primary btn-sm"
+                  (click)="connectToServer(server)"
+                >
+                  Connect
+                </button>
+                <button 
+                  class="btn btn-outline btn-sm"
+                  (click)="editServer(server)"
+                >
+                  Edit
+                </button>
+                <button 
+                  class="btn btn-danger btn-sm"
+                  (click)="deleteServer(server)"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Preset Servers -->
+  <div class="preset-servers-section">
+    <div class="section-card">
+      <h2>Preset FHIR Servers</h2>
+      <p class="section-description">Quick access to commonly used public FHIR servers</p>
+      
+      <div class="servers-grid">
+        @for (preset of presetServers(); track preset.url) {
+          <div class="server-card preset">
+            <div class="server-header">
+              <h3>{{ preset.name }}</h3>
+            </div>
+            <div class="server-details">
+              <div class="server-url">{{ preset.url }}</div>
+              <div class="server-description">{{ preset.description }}</div>
+            </div>
+            <div class="server-actions">
+              <button 
+                class="btn btn-primary btn-sm"
+                (click)="connectToServer(preset)"
+              >
+                Connect
+              </button>
+              <button 
+                class="btn btn-outline btn-sm"
+                (click)="addPresetServer(preset)"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Results -->
+  @if (testResult()) {
+    <div class="test-results-section">
+      <div class="section-card">
+        @if (testResult()?.success) {
+          <div class="test-success">
+            <h3>✅ Connection Successful</h3>
+            <div class="test-details">
+              <div class="detail-grid">
+                @if (testResult()?.responseTime) {
+                  <div class="detail-item">
+                    <label>Response Time</label>
+                    <span>{{ testResult()?.responseTime }}ms</span>
+                  </div>
+                }
+                @if (testResult()?.version) {
+                  <div class="detail-item">
+                    <label>FHIR Version</label>
+                    <span>{{ testResult()?.version }}</span>
+                  </div>
+                }
+                @if (testResult()?.capabilities && testResult()?.capabilities.length > 0) {
+                  <div class="detail-item full-width">
+                    <label>Supported Resource Types</label>
+                    <div class="capabilities-list">
+                      @for (capability of testResult()?.capabilities; track capability) {
+                        <span class="capability-tag">{{ capability }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        } @else {
+          <div class="test-error">
+            <h3>❌ Connection Failed</h3>
+            <div class="error-message">{{ testResult()?.error }}</div>
+            @if (testResult()?.details) {
+              <div class="error-details">{{ testResult()?.details }}</div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Error Display -->
+  @if (fhirService.lastError()) {
+    <div class="error-banner">
+      <div class="error-content">
+        <strong>Error:</strong> {{ fhirService.lastError() }}
+        <button (click)="fhirService.clearError()" class="error-close">×</button>
+      </div>
+    </div>
+  }
+</div>

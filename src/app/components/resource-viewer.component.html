@@ -1,0 +1,79 @@
+<div class="resource-viewer">
+  @if (resource) {
+    <div class="resource-header">
+      <div class="resource-type-badge" [class]="'fhir-resource-badge ' + resource.resourceType.toLowerCase()">
+        {{ resource.resourceType }}
+      </div>
+      <div class="resource-id">
+        @if (resource.id) {
+          <span class="label">ID:</span>
+          <span class="value">{{ resource.id }}</span>
+        }
+      </div>
+      @if (resource.meta?.lastUpdated) {
+        <div class="resource-updated">
+          <span class="label">Last Updated:</span>
+          <span class="value">{{ formatDate(resource.meta?.lastUpdated!) }}</span>
+        </div>
+      }
+    </div>
+
+    <div class="resource-content">
+      @switch (resource.resourceType) {
+        @case ('Patient') {
+          <app-patient-form [resource]="resource" [readonly]="readonly"></app-patient-form>
+        }
+        @case ('Practitioner') {
+          <app-practitioner-form [resource]="resource" [readonly]="readonly"></app-practitioner-form>
+        }
+        @case ('Observation') {
+          <app-observation-form [resource]="resource" [readonly]="readonly"></app-observation-form>
+        }
+        @case ('Condition') {
+          <app-condition-form [resource]="resource" [readonly]="readonly"></app-condition-form>
+        }
+        @case ('Coverage') {
+          <app-coverage-form [resource]="resource" [readonly]="readonly"></app-coverage-form>
+        }
+        @case ('Organization') {
+          <app-organization-form [resource]="resource" [readonly]="readonly"></app-organization-form>
+        }
+        @case ('Location') {
+          <app-location-form [resource]="resource" [readonly]="readonly"></app-location-form>
+        }
+        @case ('Encounter') {
+          <app-encounter-form [resource]="resource" [readonly]="readonly"></app-encounter-form>
+        }
+        @case ('Procedure') {
+          <app-procedure-form [resource]="resource" [readonly]="readonly"></app-procedure-form>
+        }
+        @case ('MedicationStatement') {
+          <app-medication-statement-form [resource]="resource" [readonly]="readonly"></app-medication-statement-form>
+        }
+        @case ('DiagnosticReport') {
+          <app-diagnostic-report-form [resource]="resource" [readonly]="readonly"></app-diagnostic-report-form>
+        }
+        @case ('Immunization') {
+          <app-immunization-form [resource]="resource" [readonly]="readonly"></app-immunization-form>
+        }
+        @case ('AllergyIntolerance') {
+          <app-allergy-intolerance-form [resource]="resource" [readonly]="readonly"></app-allergy-intolerance-form>
+        }
+        @default {
+          <app-default-resource-form [resource]="resource" [readonly]="readonly"></app-default-resource-form>
+        }
+      }
+    </div>
+
+    @if (!readonly) {
+      <div class="resource-actions">
+        <button (click)="onSave()" class="btn-primary" [disabled]="!hasChanges">
+          Save Changes
+        </button>
+        <button (click)="onCancel()" class="btn-secondary">
+          Cancel
+        </button>
+      </div>
+    }
+  }
+</div>
