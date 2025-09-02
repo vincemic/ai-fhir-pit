@@ -25,6 +25,14 @@
   --vscode-error: #f44747;
   --vscode-info: #75beff;
   
+  /* Surface and Dropdown Colors */
+  --surface-color: #1e1e1e;
+  --surface-elevated: #252526;
+  --border-color: #414141;
+  --hover-color: #2d2d30;
+  --text-primary: #cccccc;
+  --primary-color: #007acc;
+  
   /* FHIR Resource Type Colors */
   --fhir-patient: #4fc3f7;
   --fhir-practitioner: #81c784;
@@ -539,6 +547,65 @@ html {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* Light theme overrides */
+@media (prefers-color-scheme: light) {
+  :root {
+    --surface-color: #ffffff;
+    --surface-elevated: #f8f9fa;
+    --border-color: #e0e0e0;
+    --hover-color: #f5f5f5;
+    --text-primary: #000000;
+    --vscode-bg-primary: #ffffff;
+    --vscode-bg-secondary: #f3f3f3;
+    --vscode-text-primary: #333333;
+  }
+}
+
+/* Angular Material Dropdown Fix */
+.mat-mdc-select-panel {
+  background: var(--surface-color) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  min-width: 200px !important;
+}
+
+.mat-mdc-option {
+  background: var(--surface-color) !important;
+  color: var(--text-primary) !important;
+  
+  &:hover, &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+    background: var(--hover-color) !important;
+  }
+  
+  &.mdc-list-item--selected {
+    background: var(--primary-color) !important;
+    color: white !important;
+  }
+}
+
+/* Dark theme specific dropdown fixes */
+@media (prefers-color-scheme: dark) {
+  .mat-mdc-select-panel {
+    background: #424242 !important;
+    border-color: #616161 !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3) !important;
+  }
+  
+  .mat-mdc-option {
+    background: #424242 !important;
+    color: #ffffff !important;
+    
+    &:hover, &.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+      background: #616161 !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background: #1976d2 !important;
+      color: white !important;
+    }
   }
 }
 

@@ -65,6 +65,29 @@
   width: 100%;
 }
 
+// Fix for Material Select dropdown transparency
+mat-form-field {
+  .mat-mdc-select-panel {
+    background-color: var(--surface-color, #ffffff) !important;
+    border: 1px solid var(--border-color, #e0e0e0) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .mat-mdc-option {
+    background-color: var(--surface-color, #ffffff) !important;
+    color: var(--text-primary, #000000) !important;
+    
+    &:hover {
+      background-color: var(--hover-color, #f5f5f5) !important;
+    }
+    
+    &.mdc-list-item--selected {
+      background-color: var(--primary-color, #1976d2) !important;
+      color: white !important;
+    }
+  }
+}
+
 .form-options {
   display: flex;
   flex-direction: column;
@@ -252,5 +275,27 @@
   .info-card {
     background-color: rgba(33, 150, 243, 0.1);
     border-color: rgba(33, 150, 243, 0.3);
+  }
+  
+  // Dark theme dropdown fixes
+  mat-form-field {
+    .mat-mdc-select-panel {
+      background-color: #424242 !important;
+      border-color: #616161 !important;
+    }
+    
+    .mat-mdc-option {
+      background-color: #424242 !important;
+      color: #ffffff !important;
+      
+      &:hover {
+        background-color: #616161 !important;
+      }
+      
+      &.mdc-list-item--selected {
+        background-color: #1976d2 !important;
+        color: white !important;
+      }
+    }
   }
 }
