@@ -2,7 +2,7 @@
   <mat-card class="generation-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>smart_toy</mat-icon>
+        <mat-icon>science</mat-icon>
         Generate Synthetic FHIR Data
       </mat-card-title>
       <mat-card-subtitle>
@@ -116,7 +116,7 @@
 
         <!-- Generation Estimate -->
         <div class="generation-estimate">
-          <mat-icon>calculate</mat-icon>
+          <mat-icon>analytics</mat-icon>
           <span>Estimated resources to generate: <strong>{{ estimatedResourceCount() }}</strong></span>
         </div>
       </form>
@@ -182,7 +182,7 @@
               type="button"
               (click)="generateData()"
               [disabled]="!canGenerate()">
-        <mat-icon>smart_toy</mat-icon>
+        <mat-icon>science</mat-icon>
         Generate Data
       </button>
     </mat-card-actions>
