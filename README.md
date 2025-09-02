@@ -172,8 +172,40 @@ npm test
 For end-to-end testing with Playwright:
 
 ```bash
-npx playwright test
+# Run tests headlessly
+npm run test:e2e
+
+# Run tests with UI mode for debugging
+npm run test:e2e:ui
+
+# Run tests in headed mode (see browser)
+npm run test:e2e:headed
+
+# Install Playwright browsers
+npm run playwright:install
 ```
+
+## Deployment
+
+### GitHub Pages
+
+This project is automatically deployed to GitHub Pages when changes are pushed to the main branch. The deployment workflow:
+
+1. **Builds** the Angular application using the `github-pages` configuration
+2. **Tests** the application with Playwright (test failures do not block deployment)
+3. **Deploys** to GitHub Pages if the build succeeds
+
+The live application is available at: `https://vincemic.github.io/ai-fhir-pit/`
+
+### Manual Deployment
+
+To build for GitHub Pages manually:
+
+```bash
+npm run build:github-pages
+```
+
+The built files will be in `dist/fhir-pit/` and can be deployed to any static hosting service.
 
 ## FHIR Server Requirements
 
