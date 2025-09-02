@@ -1,0 +1,479 @@
+.location-form {
+  .form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .form-section {
+    background: var(--vscode-bg-secondary);
+    border: 1px solid var(--vscode-border-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+
+    .section-title {
+      margin: 0 0 1.5rem 0;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--vscode-border-primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--vscode-text-primary);
+    }
+
+    .subsection {
+      margin-top: 1.5rem;
+
+      &:first-child {
+        margin-top: 0;
+      }
+
+      .subsection-title {
+        margin: 0 0 1rem 0;
+        font-size: 1.1rem;
+        font-weight: 500;
+        color: var(--vscode-text-primary);
+        border-bottom: 1px solid var(--vscode-border-secondary);
+        padding-bottom: 0.5rem;
+      }
+    }
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+
+      &.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .form-label {
+        font-weight: 500;
+        color: var(--vscode-text-secondary);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .field-value {
+        color: var(--vscode-text-primary);
+        font-size: 1rem;
+
+        .location-name {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: var(--vscode-accent-primary);
+        }
+
+        .reference-value {
+          font-family: var(--font-family-mono);
+          color: var(--vscode-accent-primary);
+          font-size: 0.9rem;
+          word-break: break-all;
+        }
+
+        .reference-display {
+          color: var(--vscode-text-primary);
+          font-weight: 500;
+        }
+
+        .no-data {
+          color: var(--vscode-text-muted);
+          font-style: italic;
+        }
+      }
+    }
+  }
+
+  .description-content {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-secondary);
+    border-radius: 6px;
+    padding: 1.5rem;
+    line-height: 1.6;
+    color: var(--vscode-text-primary);
+  }
+
+  .identifiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+
+    .identifier-entry {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-secondary);
+      border-radius: 6px;
+      padding: 1rem;
+
+      .identifier-type {
+        font-weight: 500;
+        color: var(--vscode-text-secondary);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .identifier-value {
+        font-family: var(--font-family-mono);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--vscode-text-primary);
+        margin-bottom: 0.5rem;
+      }
+
+      .identifier-system {
+        font-size: 0.8rem;
+        color: var(--vscode-text-muted);
+        word-break: break-all;
+        margin-bottom: 0.5rem;
+      }
+
+      .identifier-period {
+        font-size: 0.9rem;
+        color: var(--vscode-text-secondary);
+        margin-top: 0.5rem;
+      }
+    }
+  }
+
+  .aliases-list, .types-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+
+    .type-entry {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-bottom: 0.5rem;
+
+      .additional-codings {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        margin-top: 0.25rem;
+
+        .coding-detail {
+          font-size: 0.75rem;
+          color: var(--vscode-text-muted);
+          background: var(--vscode-bg-tertiary);
+          padding: 0.125rem 0.5rem;
+          border-radius: 8px;
+        }
+      }
+    }
+  }
+
+  .address-entry {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-secondary);
+    border-radius: 6px;
+    padding: 1rem;
+
+    .address-text {
+      font-size: 1rem;
+      color: var(--vscode-text-primary);
+      margin-bottom: 0.75rem;
+      line-height: 1.4;
+    }
+
+    .address-period {
+      font-size: 0.9rem;
+      color: var(--vscode-text-secondary);
+      margin-top: 0.5rem;
+    }
+  }
+
+  .telecom-entry {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-secondary);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    .telecom-value {
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+
+      a {
+        color: var(--vscode-accent-primary);
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+
+    .telecom-period {
+      font-size: 0.9rem;
+      color: var(--vscode-text-secondary);
+      margin-top: 0.5rem;
+    }
+  }
+
+  .position-info {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-secondary);
+    border-radius: 6px;
+    padding: 1.5rem;
+
+    .coordinate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+
+      .coordinate-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+
+        label {
+          font-weight: 500;
+          color: var(--vscode-text-secondary);
+          font-size: 0.9rem;
+        }
+
+        .coordinate-value {
+          font-family: var(--font-family-mono);
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: var(--vscode-accent-primary);
+        }
+      }
+    }
+
+    .map-link {
+      text-align: center;
+      margin-top: 1rem;
+
+      .external-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--vscode-accent-primary);
+        text-decoration: none;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--vscode-accent-primary);
+        border-radius: 6px;
+        transition: all 0.2s;
+
+        &:hover {
+          background: var(--vscode-accent-primary);
+          color: var(--vscode-bg-primary);
+        }
+
+        &::after {
+          content: '↗';
+          font-size: 0.8rem;
+        }
+      }
+    }
+  }
+
+  .hours-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .hours-entry {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-secondary);
+      border-radius: 6px;
+      padding: 1rem;
+
+      .days-of-week {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+      }
+
+      .all-day {
+        font-weight: 600;
+        color: var(--vscode-success);
+        font-size: 1.1rem;
+      }
+
+      .time-range {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: var(--font-family-mono);
+        font-size: 1.1rem;
+
+        .opening-time,
+        .closing-time {
+          font-weight: 600;
+          color: var(--vscode-accent-primary);
+        }
+
+        .time-separator {
+          color: var(--vscode-text-muted);
+        }
+      }
+    }
+  }
+
+  .exceptions-content {
+    background: var(--vscode-bg-tertiary);
+    border: 1px solid var(--vscode-border-secondary);
+    border-radius: 6px;
+    padding: 1.5rem;
+    line-height: 1.6;
+    color: var(--vscode-text-primary);
+  }
+
+  .endpoints-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    .endpoint-entry {
+      background: var(--vscode-bg-tertiary);
+      border: 1px solid var(--vscode-border-secondary);
+      border-radius: 6px;
+      padding: 1rem;
+
+      .endpoint-reference {
+        font-family: var(--font-family-mono);
+        color: var(--vscode-accent-primary);
+        font-size: 0.9rem;
+        word-break: break-all;
+        margin-bottom: 0.5rem;
+      }
+
+      .endpoint-display {
+        color: var(--vscode-text-primary);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    &.active {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.inactive {
+      background: var(--vscode-warning);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.suspended {
+      background: var(--vscode-error);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.status-active {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.status-inactive {
+      background: var(--vscode-warning);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.status-suspended {
+      background: var(--vscode-error);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.mode-instance {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.mode-kind {
+      background: var(--vscode-accent-secondary);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.alias {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.location-type {
+      background: var(--vscode-accent-primary);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.physical-type {
+      background: var(--vscode-accent-secondary);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.operational-status {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.use-official {
+      background: var(--vscode-success);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.use-usual,
+    &.use-temp,
+    &.use-work,
+    &.use-home {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.type-physical,
+    &.type-postal,
+    &.type-both {
+      background: var(--vscode-accent-secondary);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.system-phone,
+    &.system-email,
+    &.system-url,
+    &.system-fax {
+      background: var(--vscode-text-muted);
+      color: var(--vscode-bg-primary);
+    }
+
+    &.day {
+      background: var(--vscode-info);
+      color: var(--vscode-bg-primary);
+      text-transform: capitalize;
+    }
+  }
+
+  // Responsive design
+  @media (max-width: 768px) {
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .identifiers-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .coordinate-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

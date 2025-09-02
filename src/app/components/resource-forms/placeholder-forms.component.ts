@@ -3,29 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FhirResource } from '../../services/fhir.service';
 import { ResourceFormComponent } from './resource-form.interface';
 
-@Component({
-  selector: 'app-organization-form',
-  imports: [CommonModule],
-  templateUrl: './organization-form.component.html',
-  styles: [`.organization-form { padding: 2rem; text-align: center; color: var(--vscode-text-secondary); background: var(--vscode-bg-secondary); border-radius: 8px; }`],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class OrganizationFormComponent implements ResourceFormComponent {
-  @Input() resource: FhirResource | null = null;
-  @Input() readonly: boolean = true;
-}
-
-@Component({
-  selector: 'app-location-form',
-  imports: [CommonModule],
-  templateUrl: './location-form.component.html',
-  styles: [`.location-form { padding: 2rem; text-align: center; color: var(--vscode-text-secondary); background: var(--vscode-bg-secondary); border-radius: 8px; }`],
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class LocationFormComponent implements ResourceFormComponent {
-  @Input() resource: FhirResource | null = null;
-  @Input() readonly: boolean = true;
-}
+// Organization and Location forms are now in separate files:
+// - organization-form.component.ts
+// - location-form.component.ts
 
 @Component({
   selector: 'app-encounter-form',

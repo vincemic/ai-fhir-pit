@@ -132,6 +132,59 @@ export class ResourceFormModalComponent {
         });
         break;
 
+      case 'Organization':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          active: [true],
+          name: ['', Validators.required],
+          alias: [''],
+          typeSystem: ['http://terminology.hl7.org/CodeSystem/organization-type'],
+          typeCode: [''],
+          typeDisplay: [''],
+          addressLine: [''],
+          addressCity: [''],
+          addressState: [''],
+          addressPostalCode: [''],
+          addressCountry: [''],
+          phone: [''],
+          email: [''],
+          website: [''],
+          contactName: [''],
+          contactPhone: [''],
+          contactEmail: [''],
+          partOfReference: ['']
+        });
+        break;
+
+      case 'Location':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['active', Validators.required],
+          name: ['', Validators.required],
+          alias: [''],
+          description: [''],
+          mode: ['instance'],
+          typeSystem: ['http://terminology.hl7.org/CodeSystem/v3-RoleCode'],
+          typeCode: [''],
+          typeDisplay: [''],
+          physicalTypeSystem: ['http://terminology.hl7.org/CodeSystem/location-physical-type'],
+          physicalTypeCode: [''],
+          physicalTypeDisplay: [''],
+          addressLine: [''],
+          addressCity: [''],
+          addressState: [''],
+          addressPostalCode: [''],
+          addressCountry: [''],
+          phone: [''],
+          email: [''],
+          longitude: [''],
+          latitude: [''],
+          altitude: [''],
+          managingOrganizationReference: [''],
+          partOfReference: ['']
+        });
+        break;
+
       default:
         form = this.fb.group({
           resourceJson: ['', Validators.required]
@@ -200,6 +253,12 @@ export class ResourceFormModalComponent {
         break;
       case 'Condition':
         resource = this.buildConditionResource(form.value);
+        break;
+      case 'Organization':
+        resource = this.buildOrganizationResource(form.value);
+        break;
+      case 'Location':
+        resource = this.buildLocationResource(form.value);
         break;
       default:
         resource = JSON.parse(form.value.resourceJson);
@@ -549,6 +608,231 @@ export class ResourceFormModalComponent {
     }
 
     return condition;
+  }
+
+  private buildOrganizationResource(formValue: any): any {
+    const organization: any = {
+      resourceType: 'Organization',
+      identifier: [{
+        system: 'http://example.org/organization-ids',
+        value: formValue.identifier
+      }],
+      active: formValue.active,
+      name: formValue.name
+    };
+
+    // Add alias
+    if (formValue.alias) {
+      organization.alias = formValue.alias.split(',').map((alias: string) => alias.trim()).filter((alias: string) => alias);
+    }
+
+    // Add type
+    if (formValue.typeCode) {
+      organization.type = [{
+        coding: [{
+          system: formValue.typeSystem,
+          code: formValue.typeCode,
+          display: formValue.typeDisplay || formValue.typeCode
+        }]
+      }];
+    }
+
+    // Add address
+    if (formValue.addressLine || formValue.addressCity || formValue.addressState || 
+        formValue.addressPostalCode || formValue.addressCountry) {
+      organization.address = [{
+        use: 'work',
+        type: 'physical',
+        line: formValue.addressLine ? [formValue.addressLine] : undefined,
+        city: formValue.addressCity,
+        state: formValue.addressState,
+        postalCode: formValue.addressPostalCode,
+        country: formValue.addressCountry
+      }];
+    }
+
+    // Add telecom
+    const telecom = [];
+    if (formValue.phone) {
+      telecom.push({
+        system: 'phone',
+        value: formValue.phone,
+        use: 'work'
+      });
+    }
+    if (formValue.email) {
+      telecom.push({
+        system: 'email',
+        value: formValue.email,
+        use: 'work'
+      });
+    }
+    if (formValue.website) {
+      telecom.push({
+        system: 'url',
+        value: formValue.website,
+        use: 'work'
+      });
+    }
+    if (telecom.length > 0) {
+      organization.telecom = telecom;
+    }
+
+    // Add contact
+    if (formValue.contactName || formValue.contactPhone || formValue.contactEmail) {
+      organization.contact = [{
+        purpose: {
+          coding: [{
+            system: 'http://terminology.hl7.org/CodeSystem/contactentity-type',
+            code: 'ADMIN',
+            display: 'Administrative'
+          }]
+        },
+        name: formValue.contactName ? {
+          text: formValue.contactName
+        } : undefined,
+        telecom: [
+          formValue.contactPhone ? {
+            system: 'phone',
+            value: formValue.contactPhone,
+            use: 'work'
+          } : null,
+          formValue.contactEmail ? {
+            system: 'email',
+            value: formValue.contactEmail,
+            use: 'work'
+          } : null
+        ].filter(t => t !== null)
+      }];
+    }
+
+    // Add partOf
+    if (formValue.partOfReference) {
+      organization.partOf = {
+        reference: formValue.partOfReference.startsWith('Organization/') ? 
+          formValue.partOfReference : 
+          `Organization/${formValue.partOfReference}`
+      };
+    }
+
+    return organization;
+  }
+
+  private buildLocationResource(formValue: any): any {
+    const location: any = {
+      resourceType: 'Location',
+      identifier: [{
+        system: 'http://example.org/location-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      name: formValue.name
+    };
+
+    // Add alias
+    if (formValue.alias) {
+      location.alias = formValue.alias.split(',').map((alias: string) => alias.trim()).filter((alias: string) => alias);
+    }
+
+    // Add description
+    if (formValue.description) {
+      location.description = formValue.description;
+    }
+
+    // Add mode
+    if (formValue.mode) {
+      location.mode = formValue.mode;
+    }
+
+    // Add type
+    if (formValue.typeCode) {
+      location.type = [{
+        coding: [{
+          system: formValue.typeSystem,
+          code: formValue.typeCode,
+          display: formValue.typeDisplay || formValue.typeCode
+        }]
+      }];
+    }
+
+    // Add physical type
+    if (formValue.physicalTypeCode) {
+      location.physicalType = {
+        coding: [{
+          system: formValue.physicalTypeSystem,
+          code: formValue.physicalTypeCode,
+          display: formValue.physicalTypeDisplay || formValue.physicalTypeCode
+        }]
+      };
+    }
+
+    // Add address
+    if (formValue.addressLine || formValue.addressCity || formValue.addressState || 
+        formValue.addressPostalCode || formValue.addressCountry) {
+      location.address = {
+        use: 'work',
+        type: 'physical',
+        line: formValue.addressLine ? [formValue.addressLine] : undefined,
+        city: formValue.addressCity,
+        state: formValue.addressState,
+        postalCode: formValue.addressPostalCode,
+        country: formValue.addressCountry
+      };
+    }
+
+    // Add telecom
+    const telecom = [];
+    if (formValue.phone) {
+      telecom.push({
+        system: 'phone',
+        value: formValue.phone,
+        use: 'work'
+      });
+    }
+    if (formValue.email) {
+      telecom.push({
+        system: 'email',
+        value: formValue.email,
+        use: 'work'
+      });
+    }
+    if (telecom.length > 0) {
+      location.telecom = telecom;
+    }
+
+    // Add position
+    if (formValue.longitude || formValue.latitude || formValue.altitude) {
+      location.position = {};
+      if (formValue.longitude) {
+        location.position.longitude = parseFloat(formValue.longitude);
+      }
+      if (formValue.latitude) {
+        location.position.latitude = parseFloat(formValue.latitude);
+      }
+      if (formValue.altitude) {
+        location.position.altitude = parseFloat(formValue.altitude);
+      }
+    }
+
+    // Add managing organization
+    if (formValue.managingOrganizationReference) {
+      location.managingOrganization = {
+        reference: formValue.managingOrganizationReference.startsWith('Organization/') ? 
+          formValue.managingOrganizationReference : 
+          `Organization/${formValue.managingOrganizationReference}`
+      };
+    }
+
+    // Add partOf
+    if (formValue.partOfReference) {
+      location.partOf = {
+        reference: formValue.partOfReference.startsWith('Location/') ? 
+          formValue.partOfReference : 
+          `Location/${formValue.partOfReference}`
+      };
+    }
+
+    return location;
   }
 
   protected previewResource(): void {

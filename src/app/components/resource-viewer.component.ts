@@ -7,9 +7,9 @@ import { ObservationFormComponent } from './resource-forms/observation-form.comp
 import { ConditionFormComponent } from './resource-forms/condition-form.component';
 import { ProcedureFormComponent } from './resource-forms/procedure-form.component';
 import { CoverageFormComponent } from './resource-forms/coverage-form.component';
+import { OrganizationFormComponent } from './resource-forms/organization-form.component';
+import { LocationFormComponent } from './resource-forms/location-form.component';
 import { 
-  OrganizationFormComponent,
-  LocationFormComponent,
   EncounterFormComponent,
   MedicationStatementFormComponent,
   DiagnosticReportFormComponent,
