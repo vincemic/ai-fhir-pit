@@ -1,0 +1,216 @@
+<div class="synthetic-data-container">
+  <mat-card class="generation-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>auto_awesome</mat-icon>
+        Generate Synthetic FHIR Data
+      </mat-card-title>
+      <mat-card-subtitle>
+        Create realistic test data using SYNTHIA for your FHIR server
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Connection Status -->
+      <div class="connection-status" [class.connected]="isConnectedToFhir()" [class.disconnected]="!isConnectedToFhir()">
+        <mat-icon>{{ isConnectedToFhir() ? 'cloud_done' : 'cloud_off' }}</mat-icon>
+        <span>{{ isConnectedToFhir() ? 'Connected to FHIR Server' : 'Not Connected to FHIR Server' }}</span>
+        @if (!isConnectedToFhir()) {
+          <span class="status-subtitle">Please configure and connect to a FHIR server first</span>
+        }
+      </div>
+
+      <!-- Generation Form -->
+      <form [formGroup]="generationForm" class="generation-form">
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Number of Patients</mat-label>
+            <input matInput 
+                   type="number" 
+                   formControlName="patientCount"
+                   min="1" 
+                   max="1000">
+            <mat-hint>Generate 1-1000 patients</mat-hint>
+            @if (generationForm.get('patientCount')?.hasError('required')) {
+              <mat-error>Patient count is required</mat-error>
+            }
+            @if (generationForm.get('patientCount')?.hasError('min')) {
+              <mat-error>Minimum 1 patient required</mat-error>
+            }
+            @if (generationForm.get('patientCount')?.hasError('max')) {
+              <mat-error>Maximum 1000 patients allowed</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Locale</mat-label>
+            <mat-select formControlName="locale">
+              <mat-option value="en_US">English (US)</mat-option>
+              <mat-option value="en_GB">English (UK)</mat-option>
+              <mat-option value="es_ES">Spanish (Spain)</mat-option>
+              <mat-option value="fr_FR">French (France)</mat-option>
+              <mat-option value="de_DE">German (Germany)</mat-option>
+            </mat-select>
+            <mat-hint>Language and region for generated data</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Date Range Start</mat-label>
+            <input matInput 
+                   type="date" 
+                   formControlName="dateRangeStart">
+            <mat-hint>Start date for medical events</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Date Range End</mat-label>
+            <input matInput 
+                   type="date" 
+                   formControlName="dateRangeEnd">
+            <mat-hint>End date for medical events</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Resource Types to Generate</mat-label>
+          <mat-select formControlName="resourceTypes" multiple>
+            @for (resourceType of availableResourceTypes; track resourceType.value) {
+              <mat-option [value]="resourceType.value">
+                {{ resourceType.icon }} {{ resourceType.label }}
+              </mat-option>
+            }
+          </mat-select>
+          <mat-hint>Select which FHIR resource types to generate</mat-hint>
+          @if (generationForm.get('resourceTypes')?.hasError('required')) {
+            <mat-error>At least one resource type must be selected</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="form-options">
+          <mat-checkbox formControlName="includeRelatedResources">
+            Generate related resources for each patient
+          </mat-checkbox>
+          
+          <mat-form-field appearance="outline" class="seed-field">
+            <mat-label>Seed (Optional)</mat-label>
+            <input matInput formControlName="seed" placeholder="e.g., 12345">
+            <mat-hint>For reproducible data generation</mat-hint>
+          </mat-form-field>
+        </div>
+
+        <!-- Selected Resource Types Display -->
+        @if (generationForm.value.resourceTypes && generationForm.value.resourceTypes.length > 0) {
+          <div class="selected-types">
+            <h4>Selected Resource Types:</h4>
+            <mat-chip-listbox>
+              @for (type of generationForm.value.resourceTypes; track type) {
+                <mat-chip>
+                  {{ getResourceTypeIcon(type) }} {{ getResourceTypeDisplay(type) }}
+                </mat-chip>
+              }
+            </mat-chip-listbox>
+          </div>
+        }
+
+        <!-- Generation Estimate -->
+        <div class="generation-estimate">
+          <mat-icon>calculate</mat-icon>
+          <span>Estimated resources to generate: <strong>{{ estimatedResourceCount() }}</strong></span>
+        </div>
+      </form>
+
+      <!-- Generation Progress -->
+      @if (synthiaService.isGenerating()) {
+        <div class="progress-section">
+          <div class="progress-header">
+            <mat-spinner diameter="24"></mat-spinner>
+            <span>Generating synthetic data...</span>
+          </div>
+          <mat-progress-bar 
+            mode="determinate" 
+            [value]="synthiaService.generationProgress()">
+          </mat-progress-bar>
+          <div class="progress-text">
+            {{ synthiaService.generationProgress() }}% complete
+          </div>
+        </div>
+      }
+
+      <!-- Last Generation Result -->
+      @if (synthiaService.lastGenerationResult() && !synthiaService.isGenerating()) {
+        <div class="result-section" 
+             [class.success]="synthiaService.lastGenerationResult()?.success"
+             [class.error]="!synthiaService.lastGenerationResult()?.success">
+          <div class="result-header">
+            <mat-icon>{{ synthiaService.lastGenerationResult()?.success ? 'check_circle' : 'error' }}</mat-icon>
+            <span>Last Generation Result</span>
+          </div>
+          
+          @if (synthiaService.lastGenerationResult()?.success) {
+            <div class="result-details">
+              <p><strong>Success!</strong> Generated {{ synthiaService.lastGenerationResult()?.generatedCount }} resources</p>
+              <p>Generation time: {{ synthiaService.lastGenerationResult()?.generationTime }}ms</p>
+            </div>
+          } @else {
+            <div class="result-details">
+              <p><strong>Generation failed</strong></p>
+              @if (synthiaService.lastGenerationResult()?.errors) {
+                <ul>
+                  @for (error of synthiaService.lastGenerationResult()?.errors; track $index) {
+                    <li>{{ error }}</li>
+                  }
+                </ul>
+              }
+            </div>
+          }
+        </div>
+      }
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-button 
+              type="button"
+              (click)="resetForm()"
+              [disabled]="synthiaService.isGenerating()">
+        Reset
+      </button>
+      
+      <button mat-raised-button 
+              color="primary"
+              type="button"
+              (click)="generateData()"
+              [disabled]="!canGenerate()">
+        <mat-icon>auto_awesome</mat-icon>
+        Generate Data
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Information Card -->
+  <mat-card class="info-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>info</mat-icon>
+        About Synthetic Data Generation
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        This feature generates realistic synthetic healthcare data using SYNTHIA (Synthetic Health Intelligence Assistant).
+        The generated data includes:
+      </p>
+      <ul>
+        <li><strong>Patients</strong> with realistic demographics and medical histories</li>
+        <li><strong>Medical encounters</strong> with appropriate timing and relationships</li>
+        <li><strong>Clinical observations</strong> with medically accurate values</li>
+        <li><strong>Conditions and procedures</strong> following realistic care pathways</li>
+        <li><strong>Medications and allergies</strong> with proper clinical correlations</li>
+      </ul>
+      <p>
+        <strong>Note:</strong> This is synthetic data for testing purposes only and should never be used for actual patient care.
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

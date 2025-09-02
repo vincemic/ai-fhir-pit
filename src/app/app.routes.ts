@@ -22,6 +22,11 @@ export const routes: Routes = [
     title: 'Create Resource - FHIR-PIT'
   },
   {
+    path: 'synthetic',
+    loadComponent: () => import('./components/synthetic-data.component').then(m => m.SyntheticDataComponent),
+    title: 'Generate Synthetic Data - FHIR-PIT'
+  },
+  {
     path: 'config',
     loadComponent: () => import('./components/config.component').then(m => m.ConfigComponent),
     title: 'Configuration - FHIR-PIT'

@@ -1,6 +1,7 @@
 import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { Router } from '@angular/router';
 import { FhirService, FhirResource } from '../services/fhir.service';
 import { ResourceModalService } from '../services/resource-modal.service';
 import { ResourceFormModalComponent } from './resource-form-modal.component';
@@ -14,6 +15,7 @@ import { ResourceFormModalComponent } from './resource-form-modal.component';
 })
 export class CreateComponent {
   private readonly fb = inject(FormBuilder);
+  private readonly router = inject(Router);
   protected readonly fhirService = inject(FhirService);
   protected readonly modalService = inject(ResourceModalService);
 
@@ -61,11 +63,21 @@ export class CreateComponent {
       value: 'Encounter',
       icon: '📅',
       description: 'Healthcare service interaction'
+    },
+    {
+      value: 'synthetic-bulk',
+      icon: '🎲',
+      description: 'Generate multiple synthetic resources for testing'
     }
   ]);
 
   protected selectResourceType(resourceType: string): void {
-    this.modalService.openCreateModal(resourceType);
+    if (resourceType === 'synthetic-bulk') {
+      // Navigate to synthetic data generation page
+      this.router.navigate(['/synthetic']);
+    } else {
+      this.modalService.openCreateModal(resourceType);
+    }
   }
 
   protected onResourceCreated(resource: FhirResource): void {
