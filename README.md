@@ -2,6 +2,8 @@
 
 A comprehensive Angular-based web application for testing, managing, and interacting with FHIR (Fast Healthcare Interoperability Resources) servers. This tool provides healthcare developers and implementers with an intuitive interface to work with FHIR R4 resources.
 
+**🌐 Live Demo**: [https://vincemic.github.io/ai-fhir-pit/](https://vincemic.github.io/ai-fhir-pit/)
+
 ## Features
 
 - **🔍 Resource Search**: Advanced search capabilities across all FHIR resource types with filtering and pagination
