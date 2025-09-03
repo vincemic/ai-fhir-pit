@@ -1,4 +1,4 @@
-# FHIR-PIT (FHIR Practical Integration Tool)
+# FHIR-PIT (FHIR Practical Interface Tool)
 
 A comprehensive Angular-based web application for testing, managing, and interacting with FHIR (Fast Healthcare Interoperability Resources) servers. This tool provides healthcare developers and implementers with an intuitive interface to work with FHIR R4 resources.
 
@@ -299,3 +299,4 @@ This project is open source and available under the [MIT License](LICENSE).
 - [HAPI FHIR Documentation](https://hapifhir.io/)
 - [Synthea™ Patient Generator](https://synthetichealth.github.io/synthea/) - Open source synthetic patient generator
 - [FHIR Testing Tools](https://confluence.hl7.org/display/FHIR/FHIR+Test+Data) - Official FHIR test data resources
+
