@@ -60,9 +60,34 @@ export class CreateComponent {
       description: 'Physical location where services are provided'
     },
     {
+      value: 'Coverage',
+      icon: '💳',
+      description: 'Insurance coverage or benefits'
+    },
+    {
       value: 'Encounter',
       icon: '📅',
       description: 'Healthcare service interaction'
+    },
+    {
+      value: 'MedicationStatement',
+      icon: '💊',
+      description: 'Record of medication usage'
+    },
+    {
+      value: 'DiagnosticReport',
+      icon: '🔬',
+      description: 'Diagnostic test results and reports'
+    },
+    {
+      value: 'Immunization',
+      icon: '💉',
+      description: 'Vaccination administration records'
+    },
+    {
+      value: 'AllergyIntolerance',
+      icon: '🤧',
+      description: 'Allergies and intolerances'
     },
     {
       value: 'synthetic-bulk',

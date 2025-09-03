@@ -1,0 +1,14 @@
+<div class="simple-placeholder-form">
+  @if (resource) {
+    <div class="form-sections">
+      <section class="form-section">
+        <h3 class="section-title">{{ resource['resourceType'] || 'Resource' }} Details</h3>
+        <div class="resource-preview">
+          <pre>{{ resource | json }}</pre>
+        </div>
+      </section>
+    </div>
+  } @else {
+    <div class="no-data">No resource data available</div>
+  }
+</div>

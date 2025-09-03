@@ -10,12 +10,20 @@ import { CoverageFormComponent } from './resource-forms/coverage-form.component'
 import { OrganizationFormComponent } from './resource-forms/organization-form.component';
 import { LocationFormComponent } from './resource-forms/location-form.component';
 import { 
-  EncounterFormComponent,
-  MedicationStatementFormComponent,
-  DiagnosticReportFormComponent,
-  ImmunizationFormComponent,
+  EncounterFormComponent
+} from './resource-forms/encounter-form.component';
+import { 
+  MedicationStatementFormComponent
+} from './resource-forms/medication-statement-form.component';
+import { 
+  DiagnosticReportFormComponent
+} from './resource-forms/diagnostic-report-form.component';
+import { 
+  ImmunizationFormComponent
+} from './resource-forms/immunization-form.component';
+import { 
   AllergyIntoleranceFormComponent
-} from './resource-forms/placeholder-forms.component';
+} from './resource-forms/allergy-intolerance-form.component';
 import { DefaultResourceFormComponent } from './resource-forms/default-resource-form.component';
 
 @Component({

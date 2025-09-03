@@ -1,1 +1,255 @@
-<div class="encounter-form">Specialized Encounter form coming soon...</div>
+<div class="encounter-form">
+  @if (resource) {
+    <div class="form-sections">
+      <!-- Status & Class Section -->
+      <section class="form-section">
+        <h3 class="section-title">Status & Classification</h3>
+        <div class="form-grid">
+          @if (resource['status']) {
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <span class="field-value">
+                <span class="badge status-{{ resource['status'] }}">
+                  {{ resource['status'] | titlecase }}
+                </span>
+              </span>
+            </div>
+          }
+
+          @if (resource['class']) {
+            <div class="form-group">
+              <label class="form-label">Class</label>
+              <span class="field-value">
+                {{ getCodingDisplay(resource['class']) }}
+              </span>
+            </div>
+          }
+
+          @if (resource['priority']) {
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <span class="field-value">
+                <span class="badge priority">
+                  {{ getCodeableConceptDisplay(resource['priority']) }}
+                </span>
+              </span>
+            </div>
+          }
+
+          @if (resource['subject']) {
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <span class="field-value reference">{{ resource['subject']['reference'] }}</span>
+            </div>
+          }
+
+          @if (resource['serviceProvider']) {
+            <div class="form-group">
+              <label class="form-label">Service Provider</label>
+              <span class="field-value reference">{{ resource['serviceProvider']['reference'] }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Timeline Section -->
+      <section class="form-section">
+        <h3 class="section-title">Timeline</h3>
+        <div class="form-grid">
+          @if (resource['period']) {
+            <div class="form-group">
+              <label class="form-label">Period</label>
+              <span class="field-value">{{ getPeriodDisplay(resource['period']) }}</span>
+            </div>
+          }
+
+          @if (resource['length']) {
+            <div class="form-group">
+              <label class="form-label">Length</label>
+              <span class="field-value">{{ getDurationDisplay(resource['length']) }}</span>
+            </div>
+          }
+        </div>
+      </section>
+
+      <!-- Participants Section -->
+      @if (getParticipants().length > 0) {
+        <section class="form-section">
+          <h3 class="section-title">Participants</h3>
+          <div class="participants-list">
+            @for (participant of getParticipants(); track $index) {
+              <div class="participant-entry">
+                @if (getParticipantTypes(participant).length > 0) {
+                  <div class="participant-types">
+                    <strong>Type:</strong>
+                    @for (type of getParticipantTypes(participant); track $index) {
+                      <span class="type-badge">{{ getCodeableConceptDisplay(type) }}</span>
+                    }
+                  </div>
+                }
+                @if (participant.period) {
+                  <div class="participant-period">
+                    <strong>Period:</strong> {{ getPeriodDisplay(participant.period) }}
+                  </div>
+                }
+                @if (participant.individual) {
+                  <div class="participant-individual">
+                    <strong>Individual:</strong> <span class="reference">{{ participant.individual.reference }}</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Reason Section -->
+      @if (getReasonCodes().length > 0 || getReasonReferences().length > 0) {
+        <section class="form-section">
+          <h3 class="section-title">Reason</h3>
+          <div class="form-grid">
+            @if (getReasonCodes().length > 0) {
+              <div class="form-group full-width">
+                <label class="form-label">Reason Codes</label>
+                <div class="reason-codes">
+                  @for (reason of getReasonCodes(); track $index) {
+                    <span class="reason-badge">
+                      {{ getCodeableConceptDisplay(reason) }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (getReasonReferences().length > 0) {
+              <div class="form-group full-width">
+                <label class="form-label">Reason References</label>
+                <div class="references">
+                  @for (reason of getReasonReferences(); track $index) {
+                    <span class="field-value reference">{{ reason.reference }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Diagnosis Section -->
+      @if (getDiagnoses().length > 0) {
+        <section class="form-section">
+          <h3 class="section-title">Diagnosis</h3>
+          <div class="diagnoses-list">
+            @for (diagnosis of getDiagnoses(); track $index) {
+              <div class="diagnosis-entry">
+                @if (diagnosis.condition) {
+                  <div class="diagnosis-condition">
+                    <strong>Condition:</strong> <span class="reference">{{ diagnosis.condition.reference }}</span>
+                  </div>
+                }
+                @if (diagnosis.use) {
+                  <div class="diagnosis-use">
+                    <strong>Use:</strong> {{ getCodeableConceptDisplay(diagnosis.use) }}
+                  </div>
+                }
+                @if (diagnosis.rank !== undefined) {
+                  <div class="diagnosis-rank">
+                    <strong>Rank:</strong> {{ diagnosis.rank }}
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Location Section -->
+      @if (getLocations().length > 0) {
+        <section class="form-section">
+          <h3 class="section-title">Locations</h3>
+          <div class="locations-list">
+            @for (location of getLocations(); track $index) {
+              <div class="location-entry">
+                @if (location.location) {
+                  <div class="location-reference">
+                    <strong>Location:</strong> <span class="reference">{{ location.location.reference }}</span>
+                  </div>
+                }
+                @if (location.status) {
+                  <div class="location-status">
+                    <strong>Status:</strong> 
+                    <span class="badge location-status-{{ location.status }}">
+                      {{ location.status | titlecase }}
+                    </span>
+                  </div>
+                }
+                @if (location.physicalType) {
+                  <div class="location-physical-type">
+                    <strong>Physical Type:</strong> {{ getCodeableConceptDisplay(location.physicalType) }}
+                  </div>
+                }
+                @if (location.period) {
+                  <div class="location-period">
+                    <strong>Period:</strong> {{ getPeriodDisplay(location.period) }}
+                  </div>
+                  }
+              </div>
+            }
+          </div>
+        </section>
+      }
+
+      <!-- Hospitalization Section -->
+      @if (resource['hospitalization']) {
+        <section class="form-section">
+          <h3 class="section-title">Hospitalization</h3>
+          <div class="form-grid">
+            @if (resource['hospitalization']['preAdmissionIdentifier']) {
+              <div class="form-group">
+                <label class="form-label">Pre-admission Identifier</label>
+                <span class="field-value">{{ getIdentifierDisplay(resource['hospitalization']['preAdmissionIdentifier']) }}</span>
+              </div>
+            }
+
+            @if (resource['hospitalization']['origin']) {
+              <div class="form-group">
+                <label class="form-label">Origin</label>
+                <span class="field-value reference">{{ resource['hospitalization']['origin']['reference'] }}</span>
+              </div>
+            }
+
+            @if (resource['hospitalization']['admitSource']) {
+              <div class="form-group">
+                <label class="form-label">Admit Source</label>
+                <span class="field-value">{{ getCodeableConceptDisplay(resource['hospitalization']['admitSource']) }}</span>
+              </div>
+            }
+
+            @if (resource['hospitalization']['reAdmission']) {
+              <div class="form-group">
+                <label class="form-label">Re-admission</label>
+                <span class="field-value">{{ getCodeableConceptDisplay(resource['hospitalization']['reAdmission']) }}</span>
+              </div>
+            }
+
+            @if (resource['hospitalization']['destination']) {
+              <div class="form-group">
+                <label class="form-label">Destination</label>
+                <span class="field-value reference">{{ resource['hospitalization']['destination']['reference'] }}</span>
+              </div>
+            }
+
+            @if (resource['hospitalization']['dischargeDisposition']) {
+              <div class="form-group">
+                <label class="form-label">Discharge Disposition</label>
+                <span class="field-value">{{ getCodeableConceptDisplay(resource['hospitalization']['dischargeDisposition']) }}</span>
+              </div>
+            }
+          </div>
+        </section>
+      }
+    </div>
+  } @else {
+    <div class="no-data">No encounter data available</div>
+  }
+</div>

@@ -1,1 +1,287 @@
-<div class="allergy-intolerance-form">Specialized AllergyIntolerance form coming soon...</div>
+﻿<div class="allergy-intolerance-form">
+      @if (resource) {
+        <div class="form-sections">
+          <!-- Clinical Status & Category Section -->
+          <section class="form-section">
+            <h3 class="section-title">Clinical Information</h3>
+            <div class="form-grid">
+              @if (resource['clinicalStatus']) {
+                <div class="form-group">
+                  <label class="form-label">Clinical Status</label>
+                  <span class="field-value">
+                    <span class="badge clinical-status-{{ getClinicalStatusCode() }}">
+                      {{ getCodeableConceptDisplay(resource['clinicalStatus']) }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['verificationStatus']) {
+                <div class="form-group">
+                  <label class="form-label">Verification Status</label>
+                  <span class="field-value">
+                    <span class="badge verification-status-{{ getVerificationStatusCode() }}">
+                      {{ getCodeableConceptDisplay(resource['verificationStatus']) }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['type']) {
+                <div class="form-group">
+                  <label class="form-label">Type</label>
+                  <span class="field-value">
+                    <span class="badge allergy-type">{{ resource['type'] | titlecase }}</span>
+                  </span>
+                </div>
+              }
+
+              @if (getCategories().length > 0) {
+                <div class="form-group">
+                  <label class="form-label">Categories</label>
+                  <div class="categories">
+                    @for (category of getCategories(); track $index) {
+                      <span class="category-badge">{{ category | titlecase }}</span>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (resource['criticality']) {
+                <div class="form-group">
+                  <label class="form-label">Criticality</label>
+                  <span class="field-value">
+                    <span class="badge criticality-{{ resource['criticality'] }}">
+                      {{ resource['criticality'] | titlecase }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['patient']) {
+                <div class="form-group">
+                  <label class="form-label">Patient</label>
+                  <span class="field-value reference">{{ resource['patient']['reference'] }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Allergen Section -->
+          @if (resource['code']) {
+            <section class="form-section">
+              <h3 class="section-title">Allergen</h3>
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label class="form-label">Substance</label>
+                  <span class="field-value allergen-code">
+                    {{ getCodeableConceptDisplay(resource['code']) }}
+                    @if (getAllergenCoding()) {
+                      <div class="coding-details">
+                        <span class="system">{{ getAllergenCoding().system }}</span>
+                        @if (getAllergenCoding().code) {
+                          <span class="code">{{ getAllergenCoding().code }}</span>
+                        }
+                      </div>
+                    }
+                  </span>
+                </div>
+              </div>
+            </section>
+          }
+
+          <!-- Onset & Dates Section -->
+          <section class="form-section">
+            <h3 class="section-title">Timeline</h3>
+            <div class="form-grid">
+              @if (resource['onsetDateTime']) {
+                <div class="form-group">
+                  <label class="form-label">Onset Date/Time</label>
+                  <span class="field-value">{{ formatDateTime(resource['onsetDateTime']) }}</span>
+                </div>
+              }
+
+              @if (resource['onsetAge']) {
+                <div class="form-group">
+                  <label class="form-label">Onset Age</label>
+                  <span class="field-value">{{ getQuantityDisplay(resource['onsetAge']) }}</span>
+                </div>
+              }
+
+              @if (resource['onsetPeriod']) {
+                <div class="form-group">
+                  <label class="form-label">Onset Period</label>
+                  <span class="field-value">{{ getPeriodDisplay(resource['onsetPeriod']) }}</span>
+                </div>
+              }
+
+              @if (resource['onsetRange']) {
+                <div class="form-group">
+                  <label class="form-label">Onset Range</label>
+                  <span class="field-value">{{ getRangeDisplay(resource['onsetRange']) }}</span>
+                </div>
+              }
+
+              @if (resource['onsetString']) {
+                <div class="form-group">
+                  <label class="form-label">Onset</label>
+                  <span class="field-value">{{ resource['onsetString'] }}</span>
+                </div>
+              }
+
+              @if (resource['recordedDate']) {
+                <div class="form-group">
+                  <label class="form-label">Recorded Date</label>
+                  <span class="field-value">{{ formatDateTime(resource['recordedDate']) }}</span>
+                </div>
+              }
+
+              @if (resource['lastOccurrence']) {
+                <div class="form-group">
+                  <label class="form-label">Last Occurrence</label>
+                  <span class="field-value">{{ formatDateTime(resource['lastOccurrence']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Recording & Assertion Section -->
+          <section class="form-section">
+            <h3 class="section-title">Recording & Assertion</h3>
+            <div class="form-grid">
+              @if (resource['recorder']) {
+                <div class="form-group">
+                  <label class="form-label">Recorder</label>
+                  <span class="field-value reference">{{ resource['recorder']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['asserter']) {
+                <div class="form-group">
+                  <label class="form-label">Asserter</label>
+                  <span class="field-value reference">{{ resource['asserter']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['encounter']) {
+                <div class="form-group">
+                  <label class="form-label">Encounter</label>
+                  <span class="field-value reference">{{ resource['encounter']['reference'] }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Reactions Section -->
+          @if (getReactions().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Reactions</h3>
+              <div class="reactions-list">
+                @for (reaction of getReactions(); track $index) {
+                  <div class="reaction-entry">
+                    @if (reaction.substance) {
+                      <div class="reaction-substance">
+                        <strong>Substance:</strong> {{ getCodeableConceptDisplay(reaction.substance) }}
+                      </div>
+                    }
+
+                    @if (getReactionManifestations(reaction).length > 0) {
+                      <div class="reaction-manifestations">
+                        <strong>Manifestations:</strong>
+                        <div class="manifestations-list">
+                          @for (manifestation of getReactionManifestations(reaction); track $index) {
+                            <span class="manifestation-badge">{{ getCodeableConceptDisplay(manifestation) }}</span>
+                          }
+                        </div>
+                      </div>
+                    }
+
+                    @if (reaction.description) {
+                      <div class="reaction-description">
+                        <strong>Description:</strong> {{ reaction.description }}
+                      </div>
+                    }
+
+                    @if (reaction.onset) {
+                      <div class="reaction-onset">
+                        <strong>Onset:</strong> {{ formatDateTime(reaction.onset) }}
+                      </div>
+                    }
+
+                    @if (reaction.severity) {
+                      <div class="reaction-severity">
+                        <strong>Severity:</strong>
+                        <span class="badge severity-{{ reaction.severity }}">{{ reaction.severity | titlecase }}</span>
+                      </div>
+                    }
+
+                    @if (reaction.exposureRoute) {
+                      <div class="reaction-route">
+                        <strong>Exposure Route:</strong> {{ getCodeableConceptDisplay(reaction.exposureRoute) }}
+                      </div>
+                    }
+
+                    @if (getNotes(reaction).length > 0) {
+                      <div class="reaction-notes">
+                        <strong>Notes:</strong>
+                        <div class="notes-list">
+                          @for (note of getNotes(reaction); track $index) {
+                            <div class="note-entry">
+                              @if (note.authorReference || note.authorString) {
+                                <div class="note-author">
+                                  @if (note.authorReference) {
+                                    {{ note.authorReference.reference }}
+                                  } @else {
+                                    {{ note.authorString }}
+                                  }
+                                </div>
+                              }
+                              @if (note.time) {
+                                <div class="note-time">{{ formatDateTime(note.time) }}</div>
+                              }
+                              @if (note.text) {
+                                <div class="note-text">{{ note.text }}</div>
+                              }
+                            </div>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Additional Notes -->
+          @if (getAllergyNotes().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Notes</h3>
+              <div class="notes-list">
+                @for (note of getAllergyNotes(); track $index) {
+                  <div class="note-entry">
+                    @if (note.authorReference || note.authorString) {
+                      <div class="note-author">
+                        @if (note.authorReference) {
+                          {{ note.authorReference.reference }}
+                        } @else {
+                          {{ note.authorString }}
+                        }
+                      </div>
+                    }
+                    @if (note.time) {
+                      <div class="note-time">{{ formatDateTime(note.time) }}</div>
+                    }
+                    @if (note.text) {
+                      <div class="note-text">{{ note.text }}</div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      } @else {
+        <div class="no-data">No allergy intolerance data available</div>
+      }
+    </div>

@@ -1,0 +1,38 @@
+.encounter-form {
+  .form-sections { display: flex; flex-direction: column; gap: 2rem; }
+  .form-section { background: var(--vscode-bg-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--vscode-border-secondary); }
+  .section-title { margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 600; color: var(--vscode-text-primary); border-bottom: 1px solid var(--vscode-border-secondary); padding-bottom: 0.5rem; }
+  .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+  .form-group.full-width { grid-column: 1 / -1; }
+  .form-label { font-size: 0.9rem; font-weight: 500; color: var(--vscode-text-secondary); }
+  .field-value { color: var(--vscode-text-primary); word-break: break-word; }
+  .field-value.reference, .reference { font-family: var(--font-family-mono); color: var(--vscode-link-primary); }
+  .no-data { text-align: center; color: var(--vscode-text-secondary); font-style: italic; padding: 2rem; }
+  
+  .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500; color: white; }
+  .type-badge, .reason-badge { padding: 0.25rem 0.5rem; background: var(--vscode-bg-tertiary); border: 1px solid var(--vscode-border-secondary); border-radius: 4px; font-size: 0.85rem; }
+  
+  .reason-codes, .references { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  
+  .participants-list, .diagnoses-list, .locations-list { display: flex; flex-direction: column; gap: 1rem; }
+  .participant-entry, .diagnosis-entry, .location-entry { padding: 1rem; background: var(--vscode-bg-tertiary); border-radius: 4px; }
+  .participant-types, .participant-period, .participant-individual,
+  .diagnosis-condition, .diagnosis-use, .diagnosis-rank,
+  .location-reference, .location-status, .location-physical-type, .location-period { margin-bottom: 0.5rem; font-size: 0.9rem; }
+  
+  .status-planned { background: var(--vscode-warning-primary); }
+  .status-arrived { background: var(--vscode-info-primary); }
+  .status-triaged { background: var(--vscode-accent-primary); }
+  .status-in-progress { background: var(--vscode-success-primary); }
+  .status-onleave { background: var(--vscode-warning-secondary); }
+  .status-finished { background: var(--vscode-success-secondary); }
+  .status-cancelled { background: var(--vscode-error-primary); }
+  .status-entered-in-error { background: var(--vscode-error-secondary); }
+  .status-unknown { background: var(--vscode-text-secondary); }
+  .priority { background: var(--vscode-accent-primary); }
+  .location-status-planned { background: var(--vscode-warning-primary); }
+  .location-status-active { background: var(--vscode-success-primary); }
+  .location-status-reserved { background: var(--vscode-info-primary); }
+  .location-status-completed { background: var(--vscode-success-secondary); }
+}

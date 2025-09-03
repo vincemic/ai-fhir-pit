@@ -1,0 +1,43 @@
+﻿.condition-form {
+      .form-sections { display: flex; flex-direction: column; gap: 2rem; }
+      .form-section { background: var(--vscode-bg-secondary); border: 1px solid var(--vscode-border-primary); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow-sm); }
+      .section-title { margin: 0 0 1.5rem 0; font-size: 1.25rem; font-weight: 600; color: var(--vscode-text-primary); padding-bottom: 0.75rem; border-bottom: 2px solid var(--vscode-border-primary); }
+      .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+      .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+      .form-label { font-weight: 500; color: var(--vscode-text-secondary); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; }
+      .field-value { color: var(--vscode-text-primary); }
+      .full-width { grid-column: 1 / -1; }
+      
+      .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; background: var(--vscode-accent-primary); color: var(--vscode-bg-primary); }
+      .reference { font-family: var(--font-family-mono); color: var(--vscode-accent-primary); }
+      
+      .condition-code .coding-details { margin-top: 0.5rem; font-size: 0.85rem; color: var(--vscode-text-secondary); }
+      .condition-code .system { margin-right: 1rem; }
+      .condition-code .code { font-family: var(--font-family-mono); background: var(--vscode-bg-tertiary); padding: 0.2rem 0.4rem; border-radius: 3px; }
+      
+      .categories, .body-sites { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      .category-badge, .body-site-badge, .evidence-code-badge { padding: 0.25rem 0.5rem; background: var(--vscode-bg-tertiary); border: 1px solid var(--vscode-border-secondary); border-radius: 4px; font-size: 0.85rem; }
+      
+      .stages-list, .evidence-list { display: flex; flex-direction: column; gap: 1rem; }
+      .stage-entry, .evidence-entry { padding: 1rem; background: var(--vscode-bg-tertiary); border-radius: 4px; }
+      .stage-summary { font-weight: 500; margin-bottom: 0.5rem; }
+      .stage-assessments, .stage-type, .evidence-details { font-size: 0.9rem; color: var(--vscode-text-secondary); margin-top: 0.5rem; }
+      .evidence-codes { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.5rem; }
+      
+      .notes-list { display: flex; flex-direction: column; gap: 1rem; }
+      .note-entry { padding: 1rem; background: var(--vscode-bg-tertiary); border-radius: 4px; border-left: 3px solid var(--vscode-accent-primary); }
+      .note-author { font-weight: 500; color: var(--vscode-text-primary); }
+      .note-time { font-size: 0.85rem; color: var(--vscode-text-secondary); margin-bottom: 0.5rem; }
+      .note-text { line-height: 1.5; }
+      
+      .status-active { background: var(--vscode-success-primary); }
+      .status-recurrence, .status-relapse { background: var(--vscode-warning-primary); }
+      .status-inactive, .status-remission, .status-resolved { background: var(--vscode-info-primary); }
+      .verification-confirmed { background: var(--vscode-success-primary); }
+      .verification-provisional, .verification-differential { background: var(--vscode-warning-primary); }
+      .verification-refuted, .verification-entered-in-error { background: var(--vscode-error-primary); }
+      .verification-unconfirmed { background: var(--vscode-text-secondary); }
+      .severity-severe { background: var(--vscode-error-primary); }
+      .severity-moderate { background: var(--vscode-warning-primary); }
+      .severity-mild { background: var(--vscode-info-primary); }
+    }

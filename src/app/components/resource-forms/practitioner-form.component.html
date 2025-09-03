@@ -1,0 +1,198 @@
+<div class="practitioner-form">
+      @if (resource) {
+        <div class="form-sections">
+          <!-- Basic Information -->
+          <section class="form-section">
+            <h3 class="section-title">Practitioner Details</h3>
+            <div class="form-grid">
+              <!-- Names -->
+              <div class="form-group full-width">
+                <label class="form-label">Names</label>
+                @if (getNames().length > 0) {
+                  @for (name of getNames(); track $index) {
+                    <div class="name-entry">
+                      <div class="name-display">
+                        {{ getHumanNameDisplay(name) }}
+                      </div>
+                      @if (name.use) {
+                        <span class="badge use-{{ name.use }}">{{ name.use }}</span>
+                      }
+                    </div>
+                  }
+                } @else {
+                  <span class="no-data">No names recorded</span>
+                }
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Active</label>
+                <span class="field-value">
+                  @if (resource['active'] !== undefined) {
+                    <span class="badge" [class]="resource['active'] ? 'active' : 'inactive'">
+                      {{ resource['active'] ? 'Yes' : 'No' }}
+                    </span>
+                  } @else {
+                    <span class="no-data">Not specified</span>
+                  }
+                </span>
+              </div>
+
+              @if (resource['gender']) {
+                <div class="form-group">
+                  <label class="form-label">Gender</label>
+                  <span class="field-value">
+                    <span class="badge gender-{{ resource['gender'] }}">{{ resource['gender'] | titlecase }}</span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['birthDate']) {
+                <div class="form-group">
+                  <label class="form-label">Birth Date</label>
+                  <span class="field-value">{{ formatDate(resource['birthDate']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Identifiers -->
+          @if (getIdentifiers().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Identifiers</h3>
+              <div class="identifiers-grid">
+                @for (identifier of getIdentifiers(); track $index) {
+                  <div class="identifier-entry">
+                    @if (identifier.type) {
+                      <div class="identifier-type">
+                        <strong>{{ getCodeableConceptDisplay(identifier.type) }}</strong>
+                      </div>
+                    }
+                    <div class="identifier-value" title="{{ identifier.value }}">
+                      {{ identifier.value }}
+                    </div>
+                    @if (identifier.system) {
+                      <div class="identifier-system" title="{{ identifier.system }}">
+                        <small>System: {{ identifier.system }}</small>
+                      </div>
+                    }
+                    @if (identifier.use) {
+                      <div class="identifier-badges">
+                        <span class="badge use-{{ identifier.use }}">{{ identifier.use }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Contact Information -->
+          @if (getTelecom().length > 0 || getAddresses().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Contact Information</h3>
+              
+              @if (getTelecom().length > 0) {
+                <div class="subsection">
+                  <h4>Phone & Email</h4>
+                  @for (telecom of getTelecom(); track $index) {
+                    <div class="telecom-entry">
+                      <div class="telecom-value">
+                        @if (telecom.system === 'email') {
+                          <a href="mailto:{{ telecom.value }}">{{ telecom.value }}</a>
+                        } @else if (telecom.system === 'phone') {
+                          <a href="tel:{{ telecom.value }}">{{ telecom.value }}</a>
+                        } @else {
+                          {{ telecom.value }}
+                        }
+                      </div>
+                      @if (telecom.system) {
+                        <span class="badge system-{{ telecom.system }}">{{ telecom.system }}</span>
+                      }
+                      @if (telecom.use) {
+                        <span class="badge use-{{ telecom.use }}">{{ telecom.use }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+
+              @if (getAddresses().length > 0) {
+                <div class="subsection">
+                  <h4>Addresses</h4>
+                  @for (address of getAddresses(); track $index) {
+                    <div class="address-entry">
+                      <div class="address-text">
+                        @if (address.text) {
+                          {{ address.text }}
+                        } @else {
+                          @if (address.line?.length) {
+                            <div>{{ address.line.join(', ') }}</div>
+                          }
+                          <div>{{ getAddressLine(address) }}</div>
+                        }
+                      </div>
+                      @if (address.use) {
+                        <span class="badge use-{{ address.use }}">{{ address.use }}</span>
+                      }
+                      @if (address.type) {
+                        <span class="badge type-{{ address.type }}">{{ address.type }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </section>
+          }
+
+          <!-- Qualifications -->
+          @if (getQualifications().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Qualifications</h3>
+              @for (qualification of getQualifications(); track $index) {
+                <div class="qualification-entry">
+                  @if (qualification.code) {
+                    <div class="qualification-code">
+                      <strong>{{ getCodeableConceptDisplay(qualification.code) }}</strong>
+                    </div>
+                  }
+                  @if (qualification.issuer) {
+                    <div class="qualification-issuer">
+                      Issued by: {{ qualification.issuer.display || qualification.issuer.reference }}
+                    </div>
+                  }
+                  @if (qualification.period) {
+                    <div class="qualification-period">
+                      @if (qualification.period.start) {
+                        Valid from: {{ formatDate(qualification.period.start) }}
+                      }
+                      @if (qualification.period.end) {
+                        until {{ formatDate(qualification.period.end) }}
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </section>
+          }
+
+          <!-- Communication Languages -->
+          @if (getCommunication().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Communication Languages</h3>
+              @for (comm of getCommunication(); track $index) {
+                <div class="communication-entry">
+                  @if (comm.language) {
+                    <div class="language">
+                      {{ getCodeableConceptDisplay(comm.language) }}
+                    </div>
+                  }
+                  @if (comm.preferred) {
+                    <span class="badge preferred">Preferred</span>
+                  }
+                </div>
+              }
+            </section>
+          }
+        </div>
+      }
+    </div>

@@ -1,1 +1,257 @@
-<div class="diagnostic-report-form">Specialized DiagnosticReport form coming soon...</div>
+﻿<div class="diagnostic-report-form">
+      @if (resource) {
+        <div class="form-sections">
+          <!-- Status & Category Section -->
+          <section class="form-section">
+            <h3 class="section-title">Status & Classification</h3>
+            <div class="form-grid">
+              @if (resource['status']) {
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <span class="field-value">
+                    <span class="badge status-{{ resource['status'] }}">
+                      {{ resource['status'] | titlecase }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (getCategories().length > 0) {
+                <div class="form-group">
+                  <label class="form-label">Categories</label>
+                  <div class="categories">
+                    @for (category of getCategories(); track $index) {
+                      <span class="category-badge">{{ getCodeableConceptDisplay(category) }}</span>
+                    }
+                  </div>
+                </div>
+              }
+
+              @if (resource['code']) {
+                <div class="form-group full-width">
+                  <label class="form-label">Code</label>
+                  <span class="field-value diagnostic-code">
+                    {{ getCodeableConceptDisplay(resource['code']) }}
+                    @if (getDiagnosticCoding()) {
+                      <div class="coding-details">
+                        <span class="system">{{ getDiagnosticCoding().system }}</span>
+                        @if (getDiagnosticCoding().code) {
+                          <span class="code">{{ getDiagnosticCoding().code }}</span>
+                        }
+                      </div>
+                    }
+                  </span>
+                </div>
+              }
+
+              @if (resource['subject']) {
+                <div class="form-group">
+                  <label class="form-label">Subject</label>
+                  <span class="field-value reference">{{ resource['subject']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['encounter']) {
+                <div class="form-group">
+                  <label class="form-label">Encounter</label>
+                  <span class="field-value reference">{{ resource['encounter']['reference'] }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Timeline Section -->
+          <section class="form-section">
+            <h3 class="section-title">Timeline</h3>
+            <div class="form-grid">
+              @if (resource['effectiveDateTime']) {
+                <div class="form-group">
+                  <label class="form-label">Effective Date/Time</label>
+                  <span class="field-value">{{ formatDateTime(resource['effectiveDateTime']) }}</span>
+                </div>
+              }
+
+              @if (resource['effectivePeriod']) {
+                <div class="form-group">
+                  <label class="form-label">Effective Period</label>
+                  <span class="field-value">{{ getPeriodDisplay(resource['effectivePeriod']) }}</span>
+                </div>
+              }
+
+              @if (resource['issued']) {
+                <div class="form-group">
+                  <label class="form-label">Issued</label>
+                  <span class="field-value">{{ formatDateTime(resource['issued']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Performers Section -->
+          @if (getPerformers().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Performers</h3>
+              <div class="performers-list">
+                @for (performer of getPerformers(); track $index) {
+                  <div class="performer-entry">
+                    <div class="performer-reference">
+                      <span class="reference">{{ performer.reference }}</span>
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Results Organization Section -->
+          @if (resource['resultsInterpreter'] && resource['resultsInterpreter'].length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Results Interpreter</h3>
+              <div class="interpreters-list">
+                @for (interpreter of resource['resultsInterpreter']; track $index) {
+                  <div class="interpreter-entry">
+                    <span class="field-value reference">{{ interpreter.reference }}</span>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Specimens Section -->
+          @if (getSpecimens().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Specimens</h3>
+              <div class="specimens-list">
+                @for (specimen of getSpecimens(); track $index) {
+                  <div class="specimen-entry">
+                    <span class="field-value reference">{{ specimen.reference }}</span>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Results Section -->
+          @if (getResults().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Results</h3>
+              <div class="results-list">
+                @for (result of getResults(); track $index) {
+                  <div class="result-entry">
+                    <span class="field-value reference">{{ result.reference }}</span>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Imaging Studies Section -->
+          @if (getImagingStudies().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Imaging Studies</h3>
+              <div class="imaging-studies-list">
+                @for (study of getImagingStudies(); track $index) {
+                  <div class="study-entry">
+                    <span class="field-value reference">{{ study.reference }}</span>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Media Section -->
+          @if (getMedia().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Media</h3>
+              <div class="media-list">
+                @for (media of getMedia(); track $index) {
+                  <div class="media-entry">
+                    @if (media.comment) {
+                      <div class="media-comment">
+                        <strong>Comment:</strong> {{ media.comment }}
+                      </div>
+                    }
+                    @if (media.link) {
+                      <div class="media-link">
+                        <strong>Link:</strong> <span class="reference">{{ media.link.reference }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Conclusion Section -->
+          @if (resource['conclusion'] || getConclusionCodes().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Conclusion</h3>
+              <div class="form-grid">
+                @if (resource['conclusion']) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Conclusion Text</label>
+                    <div class="conclusion-text">{{ resource['conclusion'] }}</div>
+                  </div>
+                }
+
+                @if (getConclusionCodes().length > 0) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Conclusion Codes</label>
+                    <div class="conclusion-codes">
+                      @for (code of getConclusionCodes(); track $index) {
+                        <span class="conclusion-badge">{{ getCodeableConceptDisplay(code) }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Presentation Section -->
+          @if (getPresentedForms().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Presented Forms</h3>
+              <div class="presented-forms-list">
+                @for (form of getPresentedForms(); track $index) {
+                  <div class="form-entry">
+                    @if (form.contentType) {
+                      <div class="form-content-type">
+                        <strong>Content Type:</strong> {{ form.contentType }}
+                      </div>
+                    }
+                    @if (form.language) {
+                      <div class="form-language">
+                        <strong>Language:</strong> {{ form.language }}
+                      </div>
+                    }
+                    @if (form.url) {
+                      <div class="form-url">
+                        <strong>URL:</strong> <a href="{{ form.url }}" target="_blank">{{ form.url }}</a>
+                      </div>
+                    }
+                    @if (form.size !== undefined) {
+                      <div class="form-size">
+                        <strong>Size:</strong> {{ form.size }} bytes
+                      </div>
+                    }
+                    @if (form.title) {
+                      <div class="form-title">
+                        <strong>Title:</strong> {{ form.title }}
+                      </div>
+                    }
+                    @if (form.creation) {
+                      <div class="form-creation">
+                        <strong>Creation:</strong> {{ formatDateTime(form.creation) }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      } @else {
+        <div class="no-data">No diagnostic report data available</div>
+      }
+    </div>

@@ -1,1 +1,327 @@
-<div class="immunization-form">Specialized Immunization form coming soon...</div>
+﻿<div class="immunization-form">
+      @if (resource) {
+        <div class="form-sections">
+          <!-- Vaccine Details Section -->
+          <section class="form-section">
+            <h3 class="section-title">Vaccine Details</h3>
+            <div class="form-grid">
+              @if (resource['vaccineCode']) {
+                <div class="form-group full-width">
+                  <label class="form-label">Vaccine</label>
+                  <span class="field-value vaccine-code">
+                    {{ getCodeableConceptDisplay(resource['vaccineCode']) }}
+                    @if (getVaccineCoding()) {
+                      <div class="coding-details">
+                        <span class="system">{{ getVaccineCoding().system }}</span>
+                        @if (getVaccineCoding().code) {
+                          <span class="code">{{ getVaccineCoding().code }}</span>
+                        }
+                      </div>
+                    }
+                  </span>
+                </div>
+              }
+
+              @if (resource['status']) {
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <span class="field-value">
+                    <span class="badge status-{{ resource['status'] }}">
+                      {{ resource['status'] | titlecase }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['statusReason']) {
+                <div class="form-group">
+                  <label class="form-label">Status Reason</label>
+                  <span class="field-value">
+                    {{ getCodeableConceptDisplay(resource['statusReason']) }}
+                  </span>
+                </div>
+              }
+
+              @if (resource['patient']) {
+                <div class="form-group">
+                  <label class="form-label">Patient</label>
+                  <span class="field-value reference">{{ resource['patient']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['encounter']) {
+                <div class="form-group">
+                  <label class="form-label">Encounter</label>
+                  <span class="field-value reference">{{ resource['encounter']['reference'] }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Administration Details Section -->
+          <section class="form-section">
+            <h3 class="section-title">Administration Details</h3>
+            <div class="form-grid">
+              @if (resource['occurrenceDateTime']) {
+                <div class="form-group">
+                  <label class="form-label">Occurrence Date/Time</label>
+                  <span class="field-value">{{ formatDateTime(resource['occurrenceDateTime']) }}</span>
+                </div>
+              }
+
+              @if (resource['occurrenceString']) {
+                <div class="form-group">
+                  <label class="form-label">Occurrence</label>
+                  <span class="field-value">{{ resource['occurrenceString'] }}</span>
+                </div>
+              }
+
+              @if (resource['primarySource'] !== undefined) {
+                <div class="form-group">
+                  <label class="form-label">Primary Source</label>
+                  <span class="field-value">
+                    <span class="badge {{ resource['primarySource'] ? 'primary-source-true' : 'primary-source-false' }}">
+                      {{ resource['primarySource'] ? 'Yes' : 'No' }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['reportOrigin']) {
+                <div class="form-group">
+                  <label class="form-label">Report Origin</label>
+                  <span class="field-value">
+                    {{ getCodeableConceptDisplay(resource['reportOrigin']) }}
+                  </span>
+                </div>
+              }
+
+              @if (resource['location']) {
+                <div class="form-group">
+                  <label class="form-label">Location</label>
+                  <span class="field-value reference">{{ resource['location']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['manufacturer']) {
+                <div class="form-group">
+                  <label class="form-label">Manufacturer</label>
+                  <span class="field-value reference">{{ resource['manufacturer']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['lotNumber']) {
+                <div class="form-group">
+                  <label class="form-label">Lot Number</label>
+                  <span class="field-value lot-number">{{ resource['lotNumber'] }}</span>
+                </div>
+              }
+
+              @if (resource['expirationDate']) {
+                <div class="form-group">
+                  <label class="form-label">Expiration Date</label>
+                  <span class="field-value">{{ formatDate(resource['expirationDate']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Route & Site Section -->
+          <section class="form-section">
+            <h3 class="section-title">Route & Site</h3>
+            <div class="form-grid">
+              @if (resource['route']) {
+                <div class="form-group">
+                  <label class="form-label">Route</label>
+                  <span class="field-value">
+                    {{ getCodeableConceptDisplay(resource['route']) }}
+                  </span>
+                </div>
+              }
+
+              @if (resource['site']) {
+                <div class="form-group">
+                  <label class="form-label">Site</label>
+                  <span class="field-value">
+                    {{ getCodeableConceptDisplay(resource['site']) }}
+                  </span>
+                </div>
+              }
+
+              @if (resource['doseQuantity']) {
+                <div class="form-group">
+                  <label class="form-label">Dose Quantity</label>
+                  <span class="field-value">{{ getQuantityDisplay(resource['doseQuantity']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Performers Section -->
+          @if (getPerformers().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Performers</h3>
+              <div class="performers-list">
+                @for (performer of getPerformers(); track $index) {
+                  <div class="performer-entry">
+                    @if (performer.function) {
+                      <div class="performer-function">
+                        <strong>Function:</strong> {{ getCodeableConceptDisplay(performer.function) }}
+                      </div>
+                    }
+                    @if (performer.actor) {
+                      <div class="performer-actor">
+                        <strong>Actor:</strong> <span class="reference">{{ performer.actor.reference }}</span>
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Reason Section -->
+          @if (getReasonCodes().length > 0 || getReasonReferences().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Reason</h3>
+              <div class="form-grid">
+                @if (getReasonCodes().length > 0) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Reason Codes</label>
+                    <div class="reason-codes">
+                      @for (reason of getReasonCodes(); track $index) {
+                        <span class="reason-badge">
+                          {{ getCodeableConceptDisplay(reason) }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                @if (getReasonReferences().length > 0) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Reason References</label>
+                    <div class="references">
+                      @for (reason of getReasonReferences(); track $index) {
+                        <span class="field-value reference">{{ reason.reference }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Reactions Section -->
+          @if (getReactions().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Reactions</h3>
+              <div class="reactions-list">
+                @for (reaction of getReactions(); track $index) {
+                  <div class="reaction-entry">
+                    @if (reaction.date) {
+                      <div class="reaction-date">
+                        <strong>Date:</strong> {{ formatDateTime(reaction.date) }}
+                      </div>
+                    }
+                    @if (reaction.detail) {
+                      <div class="reaction-detail">
+                        <strong>Detail:</strong> <span class="reference">{{ reaction.detail.reference }}</span>
+                      </div>
+                    }
+                    @if (reaction.reported !== undefined) {
+                      <div class="reaction-reported">
+                        <strong>Reported:</strong> {{ reaction.reported ? 'Yes' : 'No' }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Vaccination Protocol Section -->
+          @if (getProtocolApplied().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Vaccination Protocol</h3>
+              <div class="protocols-list">
+                @for (protocol of getProtocolApplied(); track $index) {
+                  <div class="protocol-entry">
+                    @if (protocol.series) {
+                      <div class="protocol-series">
+                        <strong>Series:</strong> {{ protocol.series }}
+                      </div>
+                    }
+                    @if (protocol.authority) {
+                      <div class="protocol-authority">
+                        <strong>Authority:</strong> <span class="reference">{{ protocol.authority.reference }}</span>
+                      </div>
+                    }
+                    @if (getTargetDiseases(protocol).length > 0) {
+                      <div class="target-diseases">
+                        <strong>Target Diseases:</strong>
+                        <div class="diseases-list">
+                          @for (disease of getTargetDiseases(protocol); track $index) {
+                            <span class="disease-badge">{{ getCodeableConceptDisplay(disease) }}</span>
+                          }
+                        </div>
+                      </div>
+                    }
+                    @if (protocol.doseNumberPositiveInt !== undefined) {
+                      <div class="dose-number">
+                        <strong>Dose Number:</strong> {{ protocol.doseNumberPositiveInt }}
+                      </div>
+                    }
+                    @if (protocol.doseNumberString) {
+                      <div class="dose-number">
+                        <strong>Dose Number:</strong> {{ protocol.doseNumberString }}
+                      </div>
+                    }
+                    @if (protocol.seriesDosesPositiveInt !== undefined) {
+                      <div class="series-doses">
+                        <strong>Series Doses:</strong> {{ protocol.seriesDosesPositiveInt }}
+                      </div>
+                    }
+                    @if (protocol.seriesDosesString) {
+                      <div class="series-doses">
+                        <strong>Series Doses:</strong> {{ protocol.seriesDosesString }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Additional Notes -->
+          @if (getNotes().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Notes</h3>
+              <div class="notes-list">
+                @for (note of getNotes(); track $index) {
+                  <div class="note-entry">
+                    @if (note.authorReference || note.authorString) {
+                      <div class="note-author">
+                        @if (note.authorReference) {
+                          {{ note.authorReference.reference }}
+                        } @else {
+                          {{ note.authorString }}
+                        }
+                      </div>
+                    }
+                    @if (note.time) {
+                      <div class="note-time">{{ formatDateTime(note.time) }}</div>
+                    }
+                    @if (note.text) {
+                      <div class="note-text">{{ note.text }}</div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      } @else {
+        <div class="no-data">No immunization data available</div>
+      }
+    </div>

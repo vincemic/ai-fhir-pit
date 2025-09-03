@@ -4,13 +4,13 @@ import { FhirResource } from '../../services/fhir.service';
 import { ResourceFormComponent } from './resource-form.interface';
 
 @Component({
-  selector: 'app-condition-form',
+  selector: 'app-immunization-form',
   imports: [CommonModule],
-  templateUrl: './condition-form.component.html',
-  styleUrls: ['./condition-form.component.scss'],
+  templateUrl: './immunization-form.component.html',
+  styleUrls: ['./immunization-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ConditionFormComponent implements ResourceFormComponent {
+export class ImmunizationFormComponent implements ResourceFormComponent {
   @Input() resource: FhirResource | null = null;
   @Input() readonly: boolean = true;
 
@@ -24,36 +24,36 @@ export class ConditionFormComponent implements ResourceFormComponent {
     return '';
   }
 
-  protected getCodeableConceptCode(concept: any): string {
-    if (!concept) return '';
-    if (concept.coding && concept.coding.length > 0) {
-      return concept.coding[0].code || '';
-    }
-    return '';
-  }
-
-  protected getConditionCoding(): any {
-    const code = this.resource?.['code'];
+  protected getVaccineCoding(): any {
+    const code = this.resource?.['vaccineCode'];
     if (code?.coding && code.coding.length > 0) {
       return code.coding[0];
     }
     return null;
   }
 
-  protected getCategories(): any[] {
-    return this.resource?.['category'] || [];
+  protected getPerformers(): any[] {
+    return this.resource?.['performer'] || [];
   }
 
-  protected getBodySites(): any[] {
-    return this.resource?.['bodySite'] || [];
+  protected getReasonCodes(): any[] {
+    return this.resource?.['reasonCode'] || [];
   }
 
-  protected getStages(): any[] {
-    return this.resource?.['stage'] || [];
+  protected getReasonReferences(): any[] {
+    return this.resource?.['reasonReference'] || [];
   }
 
-  protected getEvidence(): any[] {
-    return this.resource?.['evidence'] || [];
+  protected getReactions(): any[] {
+    return this.resource?.['reaction'] || [];
+  }
+
+  protected getProtocolApplied(): any[] {
+    return this.resource?.['protocolApplied'] || [];
+  }
+
+  protected getTargetDiseases(protocol: any): any[] {
+    return protocol?.targetDisease || [];
   }
 
   protected getNotes(): any[] {
@@ -67,22 +67,12 @@ export class ConditionFormComponent implements ResourceFormComponent {
     return `${value} ${unit}`.trim();
   }
 
-  protected getRangeDisplay(range: any): string {
-    if (!range) return '';
-    const low = range.low ? this.getQuantityDisplay(range.low) : '';
-    const high = range.high ? this.getQuantityDisplay(range.high) : '';
-    
-    if (low && high) {
-      return `${low} - ${high}`;
-    } else if (low) {
-      return `â‰¥ ${low}`;
-    } else if (high) {
-      return `â‰¤ ${high}`;
-    }
-    return '';
-  }
-
   protected formatDateTime(dateString: string): string {
     return new Date(dateString).toLocaleString();
   }
+
+  protected formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString();
+  }
 }
+

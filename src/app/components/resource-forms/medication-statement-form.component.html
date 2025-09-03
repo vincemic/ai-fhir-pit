@@ -1,1 +1,322 @@
-<div class="medication-statement-form">Specialized MedicationStatement form coming soon...</div>
+﻿<div class="medication-statement-form">
+      @if (resource) {
+        <div class="form-sections">
+          <!-- Status & Category Section -->
+          <section class="form-section">
+            <h3 class="section-title">Status & Classification</h3>
+            <div class="form-grid">
+              @if (resource['status']) {
+                <div class="form-group">
+                  <label class="form-label">Status</label>
+                  <span class="field-value">
+                    <span class="badge status-{{ resource['status'] }}">
+                      {{ resource['status'] | titlecase }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['statusReason']) {
+                <div class="form-group">
+                  <label class="form-label">Status Reason</label>
+                  <span class="field-value">
+                    {{ getCodeableConceptDisplay(resource['statusReason']) }}
+                  </span>
+                </div>
+              }
+
+              @if (resource['category']) {
+                <div class="form-group">
+                  <label class="form-label">Category</label>
+                  <span class="field-value">
+                    <span class="badge category">
+                      {{ getCodeableConceptDisplay(resource['category']) }}
+                    </span>
+                  </span>
+                </div>
+              }
+
+              @if (resource['subject']) {
+                <div class="form-group">
+                  <label class="form-label">Subject</label>
+                  <span class="field-value reference">{{ resource['subject']['reference'] }}</span>
+                </div>
+              }
+
+              @if (resource['context']) {
+                <div class="form-group">
+                  <label class="form-label">Context</label>
+                  <span class="field-value reference">{{ resource['context']['reference'] }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Medication Section -->
+          @if (resource['medicationCodeableConcept'] || resource['medicationReference']) {
+            <section class="form-section">
+              <h3 class="section-title">Medication</h3>
+              <div class="form-grid">
+                @if (resource['medicationCodeableConcept']) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Medication</label>
+                    <span class="field-value medication-code">
+                      {{ getCodeableConceptDisplay(resource['medicationCodeableConcept']) }}
+                      @if (getMedicationCoding()) {
+                        <div class="coding-details">
+                          <span class="system">{{ getMedicationCoding().system }}</span>
+                          @if (getMedicationCoding().code) {
+                            <span class="code">{{ getMedicationCoding().code }}</span>
+                          }
+                        </div>
+                      }
+                    </span>
+                  </div>
+                }
+
+                @if (resource['medicationReference']) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Medication Reference</label>
+                    <span class="field-value reference">{{ resource['medicationReference']['reference'] }}</span>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Timeline Section -->
+          <section class="form-section">
+            <h3 class="section-title">Timeline</h3>
+            <div class="form-grid">
+              @if (resource['effectiveDateTime']) {
+                <div class="form-group">
+                  <label class="form-label">Effective Date/Time</label>
+                  <span class="field-value">{{ formatDateTime(resource['effectiveDateTime']) }}</span>
+                </div>
+              }
+
+              @if (resource['effectivePeriod']) {
+                <div class="form-group">
+                  <label class="form-label">Effective Period</label>
+                  <span class="field-value">{{ getPeriodDisplay(resource['effectivePeriod']) }}</span>
+                </div>
+              }
+
+              @if (resource['dateAsserted']) {
+                <div class="form-group">
+                  <label class="form-label">Date Asserted</label>
+                  <span class="field-value">{{ formatDateTime(resource['dateAsserted']) }}</span>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Source Information Section -->
+          <section class="form-section">
+            <h3 class="section-title">Source Information</h3>
+            <div class="form-grid">
+              @if (resource['informationSource']) {
+                <div class="form-group">
+                  <label class="form-label">Information Source</label>
+                  <span class="field-value reference">{{ resource['informationSource']['reference'] }}</span>
+                </div>
+              }
+
+              @if (getDerivedFrom().length > 0) {
+                <div class="form-group full-width">
+                  <label class="form-label">Derived From</label>
+                  <div class="references">
+                    @for (derivedFrom of getDerivedFrom(); track $index) {
+                      <span class="field-value reference">{{ derivedFrom.reference }}</span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+
+          <!-- Reason Section -->
+          @if (getReasonCodes().length > 0 || getReasonReferences().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Reason</h3>
+              <div class="form-grid">
+                @if (getReasonCodes().length > 0) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Reason Codes</label>
+                    <div class="reason-codes">
+                      @for (reason of getReasonCodes(); track $index) {
+                        <span class="reason-badge">
+                          {{ getCodeableConceptDisplay(reason) }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                @if (getReasonReferences().length > 0) {
+                  <div class="form-group full-width">
+                    <label class="form-label">Reason References</label>
+                    <div class="references">
+                      @for (reason of getReasonReferences(); track $index) {
+                        <span class="field-value reference">{{ reason.reference }}</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Dosage Section -->
+          @if (getDosages().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Dosage</h3>
+              <div class="dosages-list">
+                @for (dosage of getDosages(); track $index) {
+                  <div class="dosage-entry">
+                    @if (dosage.sequence !== undefined) {
+                      <div class="dosage-sequence">
+                        <strong>Sequence:</strong> {{ dosage.sequence }}
+                      </div>
+                    }
+
+                    @if (dosage.text) {
+                      <div class="dosage-text">
+                        <strong>Instructions:</strong> {{ dosage.text }}
+                      </div>
+                    }
+
+                    @if (dosage.additionalInstruction && dosage.additionalInstruction.length > 0) {
+                      <div class="dosage-additional">
+                        <strong>Additional Instructions:</strong>
+                        @for (instruction of dosage.additionalInstruction; track $index) {
+                          <span class="instruction-badge">{{ getCodeableConceptDisplay(instruction) }}</span>
+                        }
+                      </div>
+                    }
+
+                    @if (dosage.patientInstruction) {
+                      <div class="dosage-patient-instruction">
+                        <strong>Patient Instructions:</strong> {{ dosage.patientInstruction }}
+                      </div>
+                    }
+
+                    @if (dosage.timing) {
+                      <div class="dosage-timing">
+                        <strong>Timing:</strong> {{ getTimingDisplay(dosage.timing) }}
+                      </div>
+                    }
+
+                    @if (dosage.asNeededBoolean !== undefined) {
+                      <div class="dosage-as-needed">
+                        <strong>As Needed:</strong> {{ dosage.asNeededBoolean ? 'Yes' : 'No' }}
+                      </div>
+                    }
+
+                    @if (dosage.asNeededCodeableConcept) {
+                      <div class="dosage-as-needed">
+                        <strong>As Needed:</strong> {{ getCodeableConceptDisplay(dosage.asNeededCodeableConcept) }}
+                      </div>
+                    }
+
+                    @if (dosage.site) {
+                      <div class="dosage-site">
+                        <strong>Site:</strong> {{ getCodeableConceptDisplay(dosage.site) }}
+                      </div>
+                    }
+
+                    @if (dosage.route) {
+                      <div class="dosage-route">
+                        <strong>Route:</strong> {{ getCodeableConceptDisplay(dosage.route) }}
+                      </div>
+                    }
+
+                    @if (dosage.method) {
+                      <div class="dosage-method">
+                        <strong>Method:</strong> {{ getCodeableConceptDisplay(dosage.method) }}
+                      </div>
+                    }
+
+                    @if (dosage.doseAndRate && dosage.doseAndRate.length > 0) {
+                      <div class="dosage-dose-rate">
+                        <strong>Dose and Rate:</strong>
+                        @for (doseRate of dosage.doseAndRate; track $index) {
+                          <div class="dose-rate-entry">
+                            @if (doseRate.type) {
+                              <span class="dose-type">{{ getCodeableConceptDisplay(doseRate.type) }}:</span>
+                            }
+                            @if (doseRate.doseQuantity) {
+                              <span class="dose-quantity">{{ getQuantityDisplay(doseRate.doseQuantity) }}</span>
+                            }
+                            @if (doseRate.doseRange) {
+                              <span class="dose-range">{{ getRangeDisplay(doseRate.doseRange) }}</span>
+                            }
+                            @if (doseRate.rateRatio) {
+                              <span class="rate-ratio">{{ getRatioDisplay(doseRate.rateRatio) }}</span>
+                            }
+                            @if (doseRate.rateRange) {
+                              <span class="rate-range">{{ getRangeDisplay(doseRate.rateRange) }}</span>
+                            }
+                            @if (doseRate.rateQuantity) {
+                              <span class="rate-quantity">{{ getQuantityDisplay(doseRate.rateQuantity) }}</span>
+                            }
+                          </div>
+                        }
+                      </div>
+                    }
+
+                    @if (dosage.maxDosePerPeriod) {
+                      <div class="dosage-max-dose">
+                        <strong>Max Dose Per Period:</strong> {{ getRatioDisplay(dosage.maxDosePerPeriod) }}
+                      </div>
+                    }
+
+                    @if (dosage.maxDosePerAdministration) {
+                      <div class="dosage-max-admin">
+                        <strong>Max Dose Per Administration:</strong> {{ getQuantityDisplay(dosage.maxDosePerAdministration) }}
+                      </div>
+                    }
+
+                    @if (dosage.maxDosePerLifetime) {
+                      <div class="dosage-max-lifetime">
+                        <strong>Max Dose Per Lifetime:</strong> {{ getQuantityDisplay(dosage.maxDosePerLifetime) }}
+                      </div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+
+          <!-- Additional Notes -->
+          @if (getNotes().length > 0) {
+            <section class="form-section">
+              <h3 class="section-title">Notes</h3>
+              <div class="notes-list">
+                @for (note of getNotes(); track $index) {
+                  <div class="note-entry">
+                    @if (note.authorReference || note.authorString) {
+                      <div class="note-author">
+                        @if (note.authorReference) {
+                          {{ note.authorReference.reference }}
+                        } @else {
+                          {{ note.authorString }}
+                        }
+                      </div>
+                    }
+                    @if (note.time) {
+                      <div class="note-time">{{ formatDateTime(note.time) }}</div>
+                    }
+                    @if (note.text) {
+                      <div class="note-text">{{ note.text }}</div>
+                    }
+                  </div>
+                }
+              </div>
+            </section>
+          }
+        </div>
+      } @else {
+        <div class="no-data">No medication statement data available</div>
+      }
+    </div>

@@ -1,0 +1,45 @@
+﻿.allergy-intolerance-form {
+      .form-sections { display: flex; flex-direction: column; gap: 2rem; }
+      .form-section { background: var(--vscode-bg-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--vscode-border-secondary); }
+      .section-title { margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 600; color: var(--vscode-text-primary); border-bottom: 1px solid var(--vscode-border-secondary); padding-bottom: 0.5rem; }
+      .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+      .form-group { display: flex; flex-direction: column; gap: 0.25rem; }
+      .form-group.full-width { grid-column: 1 / -1; }
+      .form-label { font-size: 0.9rem; font-weight: 500; color: var(--vscode-text-secondary); }
+      .field-value { color: var(--vscode-text-primary); word-break: break-word; }
+      .field-value.reference, .reference { font-family: var(--font-family-mono); color: var(--vscode-link-primary); }
+      .no-data { text-align: center; color: var(--vscode-text-secondary); font-style: italic; padding: 2rem; }
+      
+      .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.85rem; font-weight: 500; color: white; }
+      .category-badge, .manifestation-badge { padding: 0.25rem 0.5rem; background: var(--vscode-bg-tertiary); border: 1px solid var(--vscode-border-secondary); border-radius: 4px; font-size: 0.85rem; }
+      
+      .allergen-code .system { margin-right: 1rem; }
+      .allergen-code .code { font-family: var(--font-family-mono); background: var(--vscode-bg-tertiary); padding: 0.2rem 0.4rem; border-radius: 3px; }
+      
+      .categories, .manifestations-list { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+      
+      .reactions-list { display: flex; flex-direction: column; gap: 1.5rem; }
+      .reaction-entry { padding: 1.5rem; background: var(--vscode-bg-tertiary); border-radius: 6px; border-left: 4px solid var(--vscode-error-primary); }
+      .reaction-substance, .reaction-description, .reaction-onset, .reaction-severity, .reaction-route,
+      .reaction-manifestations, .reaction-notes { margin-bottom: 1rem; font-size: 0.9rem; }
+      
+      .notes-list { display: flex; flex-direction: column; gap: 1rem; }
+      .note-entry { padding: 1rem; background: var(--vscode-bg-tertiary); border-radius: 4px; border-left: 3px solid var(--vscode-accent-primary); }
+      .note-author { font-weight: 500; color: var(--vscode-text-primary); }
+      .note-time { font-size: 0.85rem; color: var(--vscode-text-secondary); margin-bottom: 0.5rem; }
+      .note-text { line-height: 1.5; }
+      
+      .clinical-status-active { background: var(--vscode-success-primary); }
+      .clinical-status-inactive { background: var(--vscode-text-secondary); }
+      .clinical-status-resolved { background: var(--vscode-success-secondary); }
+      .verification-status-confirmed { background: var(--vscode-success-primary); }
+      .verification-status-unconfirmed { background: var(--vscode-warning-primary); }
+      .verification-status-refuted { background: var(--vscode-error-primary); }
+      .allergy-type { background: var(--vscode-accent-primary); }
+      .criticality-low { background: var(--vscode-success-primary); }
+      .criticality-high { background: var(--vscode-error-primary); }
+      .criticality-unable-to-assess { background: var(--vscode-warning-primary); }
+      .severity-mild { background: var(--vscode-success-primary); }
+      .severity-moderate { background: var(--vscode-warning-primary); }
+      .severity-severe { background: var(--vscode-error-primary); }
+    }

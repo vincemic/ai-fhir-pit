@@ -1,4 +1,4 @@
-.location-form {
+﻿.location-form {
   .form-sections {
     display: flex;
     flex-direction: column;
@@ -271,7 +271,7 @@
         }
 
         &::after {
-          content: '↗';
+          content: 'â†—';
           font-size: 0.8rem;
         }
       }

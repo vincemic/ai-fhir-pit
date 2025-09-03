@@ -487,6 +487,431 @@ import { FhirService, FhirResource } from '../services/fhir.service';
                 </div>
               </div>
             }
+
+            @case ('Coverage') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Coverage Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Coverage ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Coverage identifier" />
+                    @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
+                      <div class="form-error">Coverage ID is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="draft">Draft</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="type">Coverage Type</label>
+                    <select id="type" formControlName="type" class="form-control">
+                      <option value="">Select type...</option>
+                      <option value="medical">Medical</option>
+                      <option value="dental">Dental</option>
+                      <option value="mental-health">Mental Health</option>
+                      <option value="substance-abuse">Substance Abuse</option>
+                      <option value="vision">Vision</option>
+                      <option value="drug">Drug</option>
+                      <option value="short-term">Short Term</option>
+                      <option value="long-term-care">Long Term Care</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="beneficiary">Beneficiary (Patient) *</label>
+                    <input id="beneficiary" formControlName="beneficiary" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="payor">Payor (Organization) *</label>
+                    <input id="payor" formControlName="payor" class="form-control" placeholder="Organization/456" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="period_start">Coverage Start Date</label>
+                    <input id="period_start" type="date" formControlName="period_start" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="period_end">Coverage End Date</label>
+                    <input id="period_end" type="date" formControlName="period_end" class="form-control" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Encounter') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Encounter Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Encounter ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Encounter identifier" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="planned">Planned</option>
+                      <option value="arrived">Arrived</option>
+                      <option value="triaged">Triaged</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="onleave">On Leave</option>
+                      <option value="finished">Finished</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="class">Class *</label>
+                    <select id="class" formControlName="class" class="form-control">
+                      <option value="AMB">Ambulatory</option>
+                      <option value="EMER">Emergency</option>
+                      <option value="FLD">Field</option>
+                      <option value="HH">Home Health</option>
+                      <option value="IMP">Inpatient</option>
+                      <option value="ACUTE">Inpatient Acute</option>
+                      <option value="NONAC">Inpatient Non-Acute</option>
+                      <option value="OBSENC">Observation Encounter</option>
+                      <option value="PRENC">Pre-admission</option>
+                      <option value="SS">Short Stay</option>
+                      <option value="VR">Virtual</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subject">Subject (Patient) *</label>
+                    <input id="subject" formControlName="subject" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="period_start">Start Date/Time</label>
+                    <input id="period_start" type="datetime-local" formControlName="period_start" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="period_end">End Date/Time</label>
+                    <input id="period_end" type="datetime-local" formControlName="period_end" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="serviceProvider">Service Provider (Organization)</label>
+                    <input id="serviceProvider" formControlName="serviceProvider" class="form-control" placeholder="Organization/456" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('MedicationStatement') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Medication Statement Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Statement ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="MedicationStatement identifier" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="completed">Completed</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="intended">Intended</option>
+                      <option value="stopped">Stopped</option>
+                      <option value="on-hold">On Hold</option>
+                      <option value="unknown">Unknown</option>
+                      <option value="not-taken">Not Taken</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="medicationCodeSystem">Medication Code System</label>
+                    <select id="medicationCodeSystem" formControlName="medicationCodeSystem" class="form-control">
+                      <option value="http://www.nlm.nih.gov/research/umls/rxnorm">RxNorm</option>
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://hl7.org/fhir/sid/ndc">NDC</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="medicationCode">Medication Code *</label>
+                    <input id="medicationCode" formControlName="medicationCode" class="form-control" placeholder="e.g., 314076" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="medicationDisplay">Medication Display *</label>
+                    <input id="medicationDisplay" formControlName="medicationDisplay" class="form-control" placeholder="e.g., Lisinopril 10mg tablet" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subject">Subject (Patient) *</label>
+                    <input id="subject" formControlName="subject" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="effectiveDateTime">Effective Date/Time</label>
+                    <input id="effectiveDateTime" type="datetime-local" formControlName="effectiveDateTime" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="dosage">Dosage Instructions</label>
+                    <textarea id="dosage" formControlName="dosage" class="form-control" rows="3" placeholder="e.g., Take one tablet daily with food"></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('DiagnosticReport') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Diagnostic Report Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Report ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="DiagnosticReport identifier" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="registered">Registered</option>
+                      <option value="partial">Partial</option>
+                      <option value="preliminary">Preliminary</option>
+                      <option value="final">Final</option>
+                      <option value="amended">Amended</option>
+                      <option value="corrected">Corrected</option>
+                      <option value="appended">Appended</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" formControlName="category" class="form-control">
+                      <option value="">Select category...</option>
+                      <option value="LAB">Laboratory</option>
+                      <option value="RAD">Radiology</option>
+                      <option value="CT">Cardiology</option>
+                      <option value="URO">Urology</option>
+                      <option value="PATH">Pathology</option>
+                      <option value="OTH">Other</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://loinc.org">LOINC</option>
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://www.ama-assn.org/go/cpt">CPT</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="code">Report Code *</label>
+                    <input id="code" formControlName="code" class="form-control" placeholder="e.g., 58410-2" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., CBC panel - Blood by Automated count" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subject">Subject (Patient) *</label>
+                    <input id="subject" formControlName="subject" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="effectiveDateTime">Effective Date/Time</label>
+                    <input id="effectiveDateTime" type="datetime-local" formControlName="effectiveDateTime" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="conclusion">Conclusion</label>
+                    <textarea id="conclusion" formControlName="conclusion" class="form-control" rows="4" placeholder="Report conclusion or interpretation"></textarea>
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Immunization') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Immunization Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Immunization ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Immunization identifier" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="completed">Completed</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="not-done">Not Done</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="vaccineCodeSystem">Vaccine Code System</label>
+                    <select id="vaccineCodeSystem" formControlName="vaccineCodeSystem" class="form-control">
+                      <option value="http://hl7.org/fhir/sid/cvx">CVX</option>
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://hl7.org/fhir/sid/ndc">NDC</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="vaccineCode">Vaccine Code *</label>
+                    <input id="vaccineCode" formControlName="vaccineCode" class="form-control" placeholder="e.g., 207" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="vaccineDisplay">Vaccine Display *</label>
+                    <input id="vaccineDisplay" formControlName="vaccineDisplay" class="form-control" placeholder="e.g., COVID-19, mRNA, LNP-S, PF, 30 mcg/0.3 mL dose" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="patient">Patient *</label>
+                    <input id="patient" formControlName="patient" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="occurrenceDateTime">Occurrence Date/Time *</label>
+                    <input id="occurrenceDateTime" type="datetime-local" formControlName="occurrenceDateTime" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="primarySource">Primary Source</label>
+                    <select id="primarySource" formControlName="primarySource" class="form-control">
+                      <option value="true">True</option>
+                      <option value="false">False</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="lotNumber">Lot Number</label>
+                    <input id="lotNumber" formControlName="lotNumber" class="form-control" placeholder="Vaccine lot number" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performer">Performer (Practitioner)</label>
+                    <input id="performer" formControlName="performer" class="form-control" placeholder="Practitioner/456" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('AllergyIntolerance') {
+              <div class="form-grid">
+                <div class="form-section-group">
+                  <h3>Allergy/Intolerance Information</h3>
+
+                  <div class="form-group">
+                    <label for="identifier">Allergy ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="AllergyIntolerance identifier" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="clinicalStatus">Clinical Status</label>
+                    <select id="clinicalStatus" formControlName="clinicalStatus" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="verificationStatus">Verification Status</label>
+                    <select id="verificationStatus" formControlName="verificationStatus" class="form-control">
+                      <option value="unconfirmed">Unconfirmed</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="refuted">Refuted</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="type">Type</label>
+                    <select id="type" formControlName="type" class="form-control">
+                      <option value="allergy">Allergy</option>
+                      <option value="intolerance">Intolerance</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="category">Category</label>
+                    <select id="category" formControlName="category" class="form-control">
+                      <option value="food">Food</option>
+                      <option value="medication">Medication</option>
+                      <option value="environment">Environment</option>
+                      <option value="biologic">Biologic</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="criticality">Criticality</label>
+                    <select id="criticality" formControlName="criticality" class="form-control">
+                      <option value="low">Low Risk</option>
+                      <option value="high">High Risk</option>
+                      <option value="unable-to-assess">Unable to Assess Risk</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://www.nlm.nih.gov/research/umls/rxnorm">RxNorm</option>
+                      <option value="http://fdasis.nlm.nih.gov">UNII</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="code">Allergen Code *</label>
+                    <input id="code" formControlName="code" class="form-control" placeholder="e.g., 227493005" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Allergen Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Cashew nuts" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="patient">Patient *</label>
+                    <input id="patient" formControlName="patient" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="onsetDateTime">Onset Date/Time</label>
+                    <input id="onsetDateTime" type="datetime-local" formControlName="onsetDateTime" class="form-control" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="note">Additional Notes</label>
+                    <textarea id="note" formControlName="note" class="form-control" rows="3" placeholder="Additional information about the allergy/intolerance"></textarea>
+                  </div>
+                </div>
+              </div>
+            }
             
             @default {
               <div class="form-grid">
@@ -724,6 +1149,89 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
         });
         break;
 
+      case 'Coverage':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['active', Validators.required],
+          type: [''],
+          beneficiary: ['', Validators.required],
+          payor: ['', Validators.required],
+          period_start: [''],
+          period_end: ['']
+        });
+        break;
+
+      case 'Encounter':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['finished', Validators.required],
+          class: ['AMB', Validators.required],
+          subject: ['', Validators.required],
+          period_start: [''],
+          period_end: [''],
+          serviceProvider: ['']
+        });
+        break;
+
+      case 'MedicationStatement':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['active', Validators.required],
+          medicationCodeSystem: ['http://www.nlm.nih.gov/research/umls/rxnorm'],
+          medicationCode: ['', Validators.required],
+          medicationDisplay: ['', Validators.required],
+          subject: ['', Validators.required],
+          effectiveDateTime: [''],
+          dosage: ['']
+        });
+        break;
+
+      case 'DiagnosticReport':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['final', Validators.required],
+          category: [''],
+          codeSystem: ['http://loinc.org'],
+          code: ['', Validators.required],
+          codeDisplay: ['', Validators.required],
+          subject: ['', Validators.required],
+          effectiveDateTime: [''],
+          conclusion: ['']
+        });
+        break;
+
+      case 'Immunization':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['completed', Validators.required],
+          vaccineCodeSystem: ['http://hl7.org/fhir/sid/cvx'],
+          vaccineCode: ['', Validators.required],
+          vaccineDisplay: ['', Validators.required],
+          patient: ['', Validators.required],
+          occurrenceDateTime: ['', Validators.required],
+          primarySource: ['true'],
+          lotNumber: [''],
+          performer: ['']
+        });
+        break;
+
+      case 'AllergyIntolerance':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          clinicalStatus: ['active'],
+          verificationStatus: ['confirmed'],
+          type: ['allergy'],
+          category: ['food'],
+          criticality: ['low'],
+          codeSystem: ['http://snomed.info/sct'],
+          code: ['', Validators.required],
+          codeDisplay: ['', Validators.required],
+          patient: ['', Validators.required],
+          onsetDateTime: [''],
+          note: ['']
+        });
+        break;
+
       default:
         form = this.fb.group({
           resourceJson: ['', Validators.required]
@@ -808,6 +1316,24 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
       case 'Patient':
         resource = this.buildPatientResource(form.value);
         break;
+      case 'Coverage':
+        resource = this.buildCoverageResource(form.value);
+        break;
+      case 'Encounter':
+        resource = this.buildEncounterResource(form.value);
+        break;
+      case 'MedicationStatement':
+        resource = this.buildMedicationStatementResource(form.value);
+        break;
+      case 'DiagnosticReport':
+        resource = this.buildDiagnosticReportResource(form.value);
+        break;
+      case 'Immunization':
+        resource = this.buildImmunizationResource(form.value);
+        break;
+      case 'AllergyIntolerance':
+        resource = this.buildAllergyIntoleranceResource(form.value);
+        break;
       default:
         // Use JSON editor for unsupported resource types
         try {
@@ -872,5 +1398,256 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
     }
 
     return patient;
+  }
+
+  private buildCoverageResource(formValue: any): any {
+    const coverage: any = {
+      resourceType: 'Coverage',
+      identifier: [{
+        system: 'http://example.org/coverage-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      beneficiary: {
+        reference: formValue.beneficiary
+      },
+      payor: [{
+        reference: formValue.payor
+      }]
+    };
+
+    if (formValue.type) {
+      coverage.type = {
+        coding: [{
+          system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+          code: formValue.type,
+          display: formValue.type
+        }]
+      };
+    }
+
+    if (formValue.period_start || formValue.period_end) {
+      coverage.period = {};
+      if (formValue.period_start) {
+        coverage.period.start = formValue.period_start;
+      }
+      if (formValue.period_end) {
+        coverage.period.end = formValue.period_end;
+      }
+    }
+
+    return coverage;
+  }
+
+  private buildEncounterResource(formValue: any): any {
+    const encounter: any = {
+      resourceType: 'Encounter',
+      identifier: [{
+        system: 'http://example.org/encounter-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      class: {
+        system: 'http://terminology.hl7.org/CodeSystem/v3-ActCode',
+        code: formValue.class,
+        display: formValue.class
+      },
+      subject: {
+        reference: formValue.subject
+      }
+    };
+
+    if (formValue.period_start || formValue.period_end) {
+      encounter.period = {};
+      if (formValue.period_start) {
+        encounter.period.start = formValue.period_start;
+      }
+      if (formValue.period_end) {
+        encounter.period.end = formValue.period_end;
+      }
+    }
+
+    if (formValue.serviceProvider) {
+      encounter.serviceProvider = {
+        reference: formValue.serviceProvider
+      };
+    }
+
+    return encounter;
+  }
+
+  private buildMedicationStatementResource(formValue: any): any {
+    const medicationStatement: any = {
+      resourceType: 'MedicationStatement',
+      identifier: [{
+        system: 'http://example.org/medication-statement-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      medicationCodeableConcept: {
+        coding: [{
+          system: formValue.medicationCodeSystem,
+          code: formValue.medicationCode,
+          display: formValue.medicationDisplay
+        }]
+      },
+      subject: {
+        reference: formValue.subject
+      }
+    };
+
+    if (formValue.effectiveDateTime) {
+      medicationStatement.effectiveDateTime = formValue.effectiveDateTime;
+    }
+
+    if (formValue.dosage) {
+      medicationStatement.dosage = [{
+        text: formValue.dosage
+      }];
+    }
+
+    return medicationStatement;
+  }
+
+  private buildDiagnosticReportResource(formValue: any): any {
+    const diagnosticReport: any = {
+      resourceType: 'DiagnosticReport',
+      identifier: [{
+        system: 'http://example.org/diagnostic-report-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      code: {
+        coding: [{
+          system: formValue.codeSystem,
+          code: formValue.code,
+          display: formValue.codeDisplay
+        }]
+      },
+      subject: {
+        reference: formValue.subject
+      }
+    };
+
+    if (formValue.category) {
+      diagnosticReport.category = [{
+        coding: [{
+          system: 'http://terminology.hl7.org/CodeSystem/v2-0074',
+          code: formValue.category,
+          display: formValue.category
+        }]
+      }];
+    }
+
+    if (formValue.effectiveDateTime) {
+      diagnosticReport.effectiveDateTime = formValue.effectiveDateTime;
+    }
+
+    if (formValue.conclusion) {
+      diagnosticReport.conclusion = formValue.conclusion;
+    }
+
+    return diagnosticReport;
+  }
+
+  private buildImmunizationResource(formValue: any): any {
+    const immunization: any = {
+      resourceType: 'Immunization',
+      identifier: [{
+        system: 'http://example.org/immunization-ids',
+        value: formValue.identifier
+      }],
+      status: formValue.status,
+      vaccineCode: {
+        coding: [{
+          system: formValue.vaccineCodeSystem,
+          code: formValue.vaccineCode,
+          display: formValue.vaccineDisplay
+        }]
+      },
+      patient: {
+        reference: formValue.patient
+      },
+      occurrenceDateTime: formValue.occurrenceDateTime,
+      primarySource: formValue.primarySource === 'true'
+    };
+
+    if (formValue.lotNumber) {
+      immunization.lotNumber = formValue.lotNumber;
+    }
+
+    if (formValue.performer) {
+      immunization.performer = [{
+        actor: {
+          reference: formValue.performer
+        }
+      }];
+    }
+
+    return immunization;
+  }
+
+  private buildAllergyIntoleranceResource(formValue: any): any {
+    const allergyIntolerance: any = {
+      resourceType: 'AllergyIntolerance',
+      identifier: [{
+        system: 'http://example.org/allergy-intolerance-ids',
+        value: formValue.identifier
+      }],
+      code: {
+        coding: [{
+          system: formValue.codeSystem,
+          code: formValue.code,
+          display: formValue.codeDisplay
+        }]
+      },
+      patient: {
+        reference: formValue.patient
+      }
+    };
+
+    if (formValue.clinicalStatus) {
+      allergyIntolerance.clinicalStatus = {
+        coding: [{
+          system: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-clinical',
+          code: formValue.clinicalStatus,
+          display: formValue.clinicalStatus
+        }]
+      };
+    }
+
+    if (formValue.verificationStatus) {
+      allergyIntolerance.verificationStatus = {
+        coding: [{
+          system: 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification',
+          code: formValue.verificationStatus,
+          display: formValue.verificationStatus
+        }]
+      };
+    }
+
+    if (formValue.type) {
+      allergyIntolerance.type = formValue.type;
+    }
+
+    if (formValue.category) {
+      allergyIntolerance.category = [formValue.category];
+    }
+
+    if (formValue.criticality) {
+      allergyIntolerance.criticality = formValue.criticality;
+    }
+
+    if (formValue.onsetDateTime) {
+      allergyIntolerance.onsetDateTime = formValue.onsetDateTime;
+    }
+
+    if (formValue.note) {
+      allergyIntolerance.note = [{
+        text: formValue.note
+      }];
+    }
+
+    return allergyIntolerance;
   }
 }

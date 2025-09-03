@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+﻿import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FhirResource } from '../../services/fhir.service';
@@ -7,100 +7,7 @@ import { ResourceFormComponent } from './resource-form.interface';
 @Component({
   selector: 'app-default-resource-form',
   imports: [CommonModule, ReactiveFormsModule],
-  template: `
-    <div class="default-resource-form">
-      @if (resource) {
-        <div class="form-sections">
-          <!-- Resource Information -->
-          <section class="form-section">
-            <h3 class="section-title">{{ resource.resourceType }} Resource</h3>
-            
-            <div class="resource-meta">
-              @if (resource.id) {
-                <div class="meta-item">
-                  <label>Resource ID</label>
-                  <span class="meta-value">{{ resource.id }}</span>
-                </div>
-              }
-              
-              @if (resource.meta?.versionId) {
-                <div class="meta-item">
-                  <label>Version ID</label>
-                  <span class="meta-value">{{ resource.meta!.versionId }}</span>
-                </div>
-              }
-              
-              @if (resource.meta?.lastUpdated) {
-                <div class="meta-item">
-                  <label>Last Updated</label>
-                  <span class="meta-value">{{ formatDateTime(resource.meta!.lastUpdated) }}</span>
-                </div>
-              }
-              
-              @if (resource.meta?.profile?.length) {
-                <div class="meta-item">
-                  <label>Profiles</label>
-                  <div class="profile-list">
-                    @for (profile of resource.meta!.profile; track $index) {
-                      <span class="profile-badge">{{ profile }}</span>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-          </section>
-
-          <!-- Resource Content -->
-          <section class="form-section">
-            <h3 class="section-title">Resource Content</h3>
-            
-            <div class="content-warning">
-              <div class="warning-icon">⚠️</div>
-              <div class="warning-text">
-                <p><strong>No specialized form available for {{ resource.resourceType }} resources.</strong></p>
-                <p>This resource type doesn't have a custom form yet. The raw JSON structure is displayed below for reference.</p>
-              </div>
-            </div>
-
-            <div class="json-container">
-              <div class="json-header">
-                <span class="json-title">Raw Resource Data</span>
-                <button class="copy-button" (click)="copyToClipboard()" title="Copy to clipboard">
-                  📋 Copy
-                </button>
-              </div>
-              <pre class="json-content">{{ formatJson(resource) }}</pre>
-            </div>
-          </section>
-
-          <!-- Key Fields (if available) -->
-          @if (getKeyFields().length > 0) {
-            <section class="form-section">
-              <h3 class="section-title">Key Fields</h3>
-              <div class="key-fields">
-                @for (field of getKeyFields(); track field.key) {
-                  <div class="key-field">
-                    <label class="field-label">{{ field.label }}</label>
-                    <div class="field-value">
-                      @if (field.type === 'reference') {
-                        <span class="reference-value">{{ field.value }}</span>
-                      } @else if (field.type === 'code') {
-                        <span class="code-value">{{ field.value }}</span>
-                      } @else if (field.type === 'date') {
-                        <span class="date-value">{{ formatDateTime(field.value) }}</span>
-                      } @else {
-                        <span class="text-value">{{ field.value }}</span>
-                      }
-                    </div>
-                  </div>
-                }
-              </div>
-            </section>
-          }
-        </div>
-      }
-    </div>
-  `,
+  templateUrl: './default-resource-form.component.html',
   styleUrl: './default-resource-form.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

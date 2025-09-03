@@ -1,0 +1,8 @@
+.simple-placeholder-form {
+  .form-sections { display: flex; flex-direction: column; gap: 2rem; }
+  .form-section { background: var(--vscode-bg-secondary); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--vscode-border-secondary); }
+  .section-title { margin: 0 0 1rem 0; font-size: 1.1rem; font-weight: 600; color: var(--vscode-text-primary); border-bottom: 1px solid var(--vscode-border-secondary); padding-bottom: 0.5rem; }
+  .resource-preview { background: var(--vscode-bg-tertiary); padding: 1rem; border-radius: 4px; overflow-x: auto; }
+  .resource-preview pre { margin: 0; font-family: var(--font-family-mono); font-size: 0.85rem; }
+  .no-data { text-align: center; color: var(--vscode-text-secondary); font-style: italic; padding: 2rem; }
+}
