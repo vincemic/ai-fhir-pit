@@ -2,7 +2,7 @@ import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@a
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FhirService } from '../services/fhir.service';
-import { ResourceModalService } from '../services/resource-modal.service';
+import { StandardizedResourceModalService } from '../services/standardized-resource-modal.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +14,7 @@ import { ResourceModalService } from '../services/resource-modal.service';
 export class DashboardComponent {
   protected readonly fhirService = inject(FhirService);
   private readonly router = inject(Router);
-  private readonly modalService = inject(ResourceModalService);
+  private readonly modalService = inject(StandardizedResourceModalService);
 
   protected readonly serverStatus = computed(() => {
     const config = this.fhirService.config();

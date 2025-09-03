@@ -3,12 +3,12 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FhirService, FhirResource } from '../services/fhir.service';
-import { ResourceModalService } from '../services/resource-modal.service';
-import { ResourceFormModalComponent } from './resource-form-modal.component';
+import { StandardizedResourceModalService } from '../services/standardized-resource-modal.service';
+import { StandardizedResourceFormModalComponent } from './standardized-resource-form-modal.component';
 
 @Component({
   selector: 'app-create',
-  imports: [CommonModule, ReactiveFormsModule, ResourceFormModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, StandardizedResourceFormModalComponent],
   templateUrl: './create.component.html',
   styleUrl: './create.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -17,7 +17,7 @@ export class CreateComponent {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   protected readonly fhirService = inject(FhirService);
-  protected readonly modalService = inject(ResourceModalService);
+  protected readonly modalService = inject(StandardizedResourceModalService);
 
   // Signals for reactive state
   protected readonly createdResource = signal<FhirResource | null>(null);

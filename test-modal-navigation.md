@@ -1,73 +1,39 @@
-# Modal Navigation Test Plan
+# Modal Architecture - Updated
 
-## Test Cases for Modal Dialog Closing on Navigation
+## Current Modal System
 
-### 1. ResourceFormModal (Create/Edit Modal)
-**Test Steps:**
-1. Navigate to the Create page (/create)
-2. Click on any resource type to open the create modal
-3. Navigate to another page (e.g., Dashboard, Search, Config) using the navigation menu
-4. **Expected Result:** Modal should close automatically
+The application now uses a unified modal architecture with the following components:
 
-### 2. Search Component Modal (Resource Details)
-**Test Steps:**
-1. Navigate to the Search page (/search)
-2. Search for resources (e.g., search for "Patient")
-3. Click on a resource to open the details modal
-4. Navigate to another page using the navigation menu
-5. **Expected Result:** Modal should close automatically
+### Core Components
+1. **StandardizedResourceFormModalComponent** - Handles all resource creation and editing
+2. **StandardizedResourceModalService** - Service for managing resource modals
+3. **ModalService** - Core modal management service
+4. **ModalComponent** - Base modal component
 
-### 3. Verification
-**Manual Testing:**
-1. Open the application at http://localhost:4200
-2. Test each modal type as described above
-3. Verify that modals close when navigation occurs
-4. Verify that modal state is properly cleaned up
+### Removed Components (No longer in use)
+- ❌ ResourceFormModalComponent (replaced by StandardizedResourceFormModalComponent)
+- ❌ ResourceModalService (replaced by StandardizedResourceModalService)
+- ❌ ModalContainerComponent (removed to fix dual modal issue)
+- ❌ StandardizedResourceViewModalComponent (removed - always use edit mode)
 
-## Implementation Details
+## Current Implementation
 
-### Changes Made:
+### Search Component
+- Uses `StandardizedResourceFormModalComponent` directly in template
+- All search results open in edit mode (no view-only)
+- Uses `StandardizedResourceModalService.openEditModal()`
 
-1. **Main App Component (`app.ts`)**
-   - Added import for `ResourceModalService`
-   - Injected `ResourceModalService` as `modalService`
-   - Modified the router navigation subscription to close ResourceModalService modals
+### Create Component  
+- Uses `StandardizedResourceFormModalComponent` directly in template
+- Uses `StandardizedResourceModalService.openCreateModal()`
 
-2. **Search Component (`search.component.ts`)**
-   - Added imports for `Router`, `NavigationEnd`, and `filter`
-   - Injected `Router` service
-   - Added router navigation subscription to close the search component's own modal (`selectedResource`)
+### Modal Demo Component
+- Uses `StandardizedResourceFormModalComponent` for demonstrations
+- Uses `StandardizedResourceModalService` for modal operations
 
-### Code Changes:
-
-```typescript
-// In app.ts - Navigation subscription
-this.router.events
-  .pipe(filter(event => event instanceof NavigationEnd))
-  .subscribe((event: NavigationEnd) => {
-    this.currentRoute.set(event.url);
-    this.isMobileMenuOpen.set(false); // Close mobile menu on navigation
-    
-    // Close modal dialogs on navigation
-    if (this.modalService.isOpen()) {
-      this.modalService.closeModal();
-    }
-  });
-
-// In search.component.ts - Navigation subscription
-this.router.events
-  .pipe(filter(event => event instanceof NavigationEnd))
-  .subscribe(() => {
-    if (this.selectedResource()) {
-      this.closeModal();
-    }
-  });
-```
-
-## Coverage
-
-This solution covers:
-- ✅ ResourceFormModal (used in Create and Search components)
-- ✅ Search component's resource details modal
-- ✅ Proper cleanup of modal state
-- ✅ Follows existing patterns in the codebase
+## Benefits of Current Architecture
+- ✅ Single modal system (no conflicts)
+- ✅ Consistent edit forms across all components  
+- ✅ Always populated modal data
+- ✅ Simplified codebase
+- ✅ No view-only modals (always edit mode as requested)
