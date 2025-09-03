@@ -40,7 +40,9 @@ export class StandardizedResourceModalService {
    * Open a modal to edit an existing resource
    */
   openEditModal(resource: FhirResource): Promise<FhirResource | undefined> {
+    console.log('openEditModal called with resource:', resource);
     const formData = this.extractFormDataFromResource(resource);
+    console.log('Extracted form data:', formData);
     
     const config: ModalConfig = {
       id: 'resource-form-modal',
@@ -56,24 +58,7 @@ export class StandardizedResourceModalService {
       } as ResourceModalData
     };
 
-    return this.modalService.open(config);
-  }
-
-  /**
-   * Open a modal to view a resource
-   */
-  openViewModal(resource: FhirResource): Promise<void> {
-    const config: ModalConfig = {
-      id: 'resource-view-modal',
-      title: `${resource.resourceType} - ${resource.id}`,
-      size: 'lg',
-      closeOnBackdrop: true,
-      closeOnEscape: true,
-      data: {
-        resource
-      }
-    };
-
+    console.log('Modal config:', config);
     return this.modalService.open(config);
   }
 
@@ -84,17 +69,13 @@ export class StandardizedResourceModalService {
     if (this.modalService.isOpen('resource-form-modal')) {
       this.modalService.close('resource-form-modal', result);
     }
-    if (this.modalService.isOpen('resource-view-modal')) {
-      this.modalService.close('resource-view-modal', result);
-    }
   }
 
   /**
    * Check if a resource modal is open
    */
   isOpen(): boolean {
-    return this.modalService.isOpen('resource-form-modal') || 
-           this.modalService.isOpen('resource-view-modal');
+    return this.modalService.isOpen('resource-form-modal');
   }
 
   /**
@@ -102,32 +83,48 @@ export class StandardizedResourceModalService {
    */
   getCurrentModalData(): ResourceModalData | undefined {
     const formModal = this.modalService.getModal('resource-form-modal');
-    const viewModal = this.modalService.getModal('resource-view-modal');
     
-    return (formModal?.config.data || viewModal?.config.data) as ResourceModalData | undefined;
+    return formModal?.config.data as ResourceModalData | undefined;
   }
 
   private extractFormDataFromResource(resource: FhirResource): any {
+    console.log('extractFormDataFromResource called with:', resource.resourceType, resource);
     // Extract form data based on resource type
     switch (resource.resourceType) {
       case 'Patient':
-        return this.extractPatientFormData(resource);
+        const patientData = this.extractPatientFormData(resource);
+        console.log('Patient form data:', patientData);
+        return patientData;
       case 'Observation':
-        return this.extractObservationFormData(resource);
+        const observationData = this.extractObservationFormData(resource);
+        console.log('Observation form data:', observationData);
+        return observationData;
       case 'Practitioner':
-        return this.extractPractitionerFormData(resource);
+        const practitionerData = this.extractPractitionerFormData(resource);
+        console.log('Practitioner form data:', practitionerData);
+        return practitionerData;
       case 'Organization':
-        return this.extractOrganizationFormData(resource);
+        const organizationData = this.extractOrganizationFormData(resource);
+        console.log('Organization form data:', organizationData);
+        return organizationData;
       case 'Location':
-        return this.extractLocationFormData(resource);
+        const locationData = this.extractLocationFormData(resource);
+        console.log('Location form data:', locationData);
+        return locationData;
       case 'Procedure':
-        return this.extractProcedureFormData(resource);
+        const procedureData = this.extractProcedureFormData(resource);
+        console.log('Procedure form data:', procedureData);
+        return procedureData;
       case 'Condition':
-        return this.extractConditionFormData(resource);
+        const conditionData = this.extractConditionFormData(resource);
+        console.log('Condition form data:', conditionData);
+        return conditionData;
       default:
-        return {
+        const jsonData = {
           resourceJson: JSON.stringify(resource, null, 2)
         };
+        console.log('Default JSON data:', jsonData);
+        return jsonData;
     }
   }
 
@@ -168,7 +165,7 @@ export class StandardizedResourceModalService {
       valueQuantityValue: valueQuantity?.value || '',
       valueQuantityUnit: valueQuantity?.unit || '',
       valueStringValue: resource.valueString || '',
-      patientReference: subject.replace('Patient/', '') || ''
+      subjectReference: subject.replace('Patient/', '') || ''
     };
   }
 

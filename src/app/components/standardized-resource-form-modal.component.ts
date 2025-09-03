@@ -93,6 +93,400 @@ import { FhirService, FhirResource } from '../services/fhir.service';
                 </div>
               </div>
             }
+
+            @case ('Practitioner') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="identifier">Practitioner ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Practitioner identifier" />
+                    @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
+                      <div class="form-error">Practitioner ID is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="active">Active Status</label>
+                    <select id="active" formControlName="active" class="form-control">
+                      <option [value]="true">Active</option>
+                      <option [value]="false">Inactive</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="family">Family Name *</label>
+                    <input id="family" formControlName="family" class="form-control" placeholder="Last name" />
+                    @if (resourceForm()!.get('family')?.errors?.['required'] && resourceForm()!.get('family')?.touched) {
+                      <div class="form-error">Family name is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="given">Given Name *</label>
+                    <input id="given" formControlName="given" class="form-control" placeholder="First name" />
+                    @if (resourceForm()!.get('given')?.errors?.['required'] && resourceForm()!.get('given')?.touched) {
+                      <div class="form-error">Given name is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" formControlName="gender" class="form-control">
+                      <option value="">Select gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="birthDate">Birth Date</label>
+                    <input id="birthDate" type="date" formControlName="birthDate" class="form-control" />
+                  </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section-group">
+                  <h3>Contact Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="+1234567890" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" formControlName="email" class="form-control" placeholder="practitioner@example.com" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Organization') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="identifier">Organization ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Organization identifier" />
+                    @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
+                      <div class="form-error">Organization ID is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="active">Active Status</label>
+                    <select id="active" formControlName="active" class="form-control">
+                      <option [value]="true">Active</option>
+                      <option [value]="false">Inactive</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name">Organization Name *</label>
+                    <input id="name" formControlName="name" class="form-control" placeholder="Organization name" />
+                    @if (resourceForm()!.get('name')?.errors?.['required'] && resourceForm()!.get('name')?.touched) {
+                      <div class="form-error">Organization name is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="type">Organization Type</label>
+                    <input id="type" formControlName="type" class="form-control" placeholder="e.g., Healthcare Provider" />
+                  </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section-group">
+                  <h3>Contact Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="+1234567890" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" formControlName="email" class="form-control" placeholder="contact@organization.com" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="website">Website</label>
+                    <input id="website" type="url" formControlName="website" class="form-control" placeholder="https://www.organization.com" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Location') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="identifier">Location ID *</label>
+                    <input id="identifier" formControlName="identifier" class="form-control" placeholder="Location identifier" />
+                    @if (resourceForm()!.get('identifier')?.errors?.['required'] && resourceForm()!.get('identifier')?.touched) {
+                      <div class="form-error">Location ID is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="suspended">Suspended</option>
+                      <option value="inactive">Inactive</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="name">Location Name *</label>
+                    <input id="name" formControlName="name" class="form-control" placeholder="Location name" />
+                    @if (resourceForm()!.get('name')?.errors?.['required'] && resourceForm()!.get('name')?.touched) {
+                      <div class="form-error">Location name is required</div>
+                    }
+                  </div>
+
+                  <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" formControlName="description" class="form-control" rows="3" placeholder="Location description"></textarea>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="mode">Mode</label>
+                    <select id="mode" formControlName="mode" class="form-control">
+                      <option value="instance">Instance</option>
+                      <option value="kind">Kind</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="type">Location Type</label>
+                    <input id="type" formControlName="type" class="form-control" placeholder="e.g., Hospital, Clinic" />
+                  </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="form-section-group">
+                  <h3>Contact Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input id="phone" type="tel" formControlName="phone" class="form-control" placeholder="+1234567890" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input id="email" type="email" formControlName="email" class="form-control" placeholder="info@location.com" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Observation') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="registered">Registered</option>
+                      <option value="preliminary">Preliminary</option>
+                      <option value="final">Final</option>
+                      <option value="amended">Amended</option>
+                      <option value="corrected">Corrected</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://loinc.org">LOINC</option>
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://www.nlm.nih.gov/research/umls/rxnorm">RxNorm</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 8867-4" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Heart rate" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subjectReference">Patient Reference *</label>
+                    <input id="subjectReference" formControlName="subjectReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="effectiveDateTime">Effective Date/Time</label>
+                    <input id="effectiveDateTime" type="datetime-local" formControlName="effectiveDateTime" class="form-control" />
+                  </div>
+                </div>
+
+                <!-- Value Information -->
+                <div class="form-section-group">
+                  <h3>Value</h3>
+                  
+                  <div class="form-group">
+                    <label for="valueType">Value Type</label>
+                    <select id="valueType" formControlName="valueType" class="form-control">
+                      <option value="valueQuantity">Quantity</option>
+                      <option value="valueString">String</option>
+                      <option value="valueCodeableConcept">Codeable Concept</option>
+                      <option value="valueBoolean">Boolean</option>
+                      <option value="valueDateTime">Date/Time</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="valueQuantityValue">Quantity Value</label>
+                    <input id="valueQuantityValue" type="number" formControlName="valueQuantityValue" class="form-control" placeholder="e.g., 72" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="valueQuantityUnit">Quantity Unit</label>
+                    <input id="valueQuantityUnit" formControlName="valueQuantityUnit" class="form-control" placeholder="e.g., beats/min" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="valueStringValue">String Value</label>
+                    <input id="valueStringValue" formControlName="valueStringValue" class="form-control" placeholder="Text value" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Procedure') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="status">Status *</label>
+                    <select id="status" formControlName="status" class="form-control">
+                      <option value="preparation">Preparation</option>
+                      <option value="in-progress">In Progress</option>
+                      <option value="not-done">Not Done</option>
+                      <option value="on-hold">On Hold</option>
+                      <option value="stopped">Stopped</option>
+                      <option value="completed">Completed</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                      <option value="unknown">Unknown</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://www.ama-assn.org/go/cpt">CPT</option>
+                      <option value="http://hl7.org/fhir/sid/icd-10-pcs">ICD-10-PCS</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 80146002" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Appendectomy" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subjectReference">Patient Reference *</label>
+                    <input id="subjectReference" formControlName="subjectReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="performedDateTime">Performed Date/Time</label>
+                    <input id="performedDateTime" type="datetime-local" formControlName="performedDateTime" class="form-control" />
+                  </div>
+                </div>
+              </div>
+            }
+
+            @case ('Condition') {
+              <div class="form-grid">
+                <!-- Basic Information -->
+                <div class="form-section-group">
+                  <h3>Basic Information</h3>
+                  
+                  <div class="form-group">
+                    <label for="clinicalStatus">Clinical Status *</label>
+                    <select id="clinicalStatus" formControlName="clinicalStatus" class="form-control">
+                      <option value="active">Active</option>
+                      <option value="recurrence">Recurrence</option>
+                      <option value="relapse">Relapse</option>
+                      <option value="inactive">Inactive</option>
+                      <option value="remission">Remission</option>
+                      <option value="resolved">Resolved</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="verificationStatus">Verification Status *</label>
+                    <select id="verificationStatus" formControlName="verificationStatus" class="form-control">
+                      <option value="unconfirmed">Unconfirmed</option>
+                      <option value="provisional">Provisional</option>
+                      <option value="differential">Differential</option>
+                      <option value="confirmed">Confirmed</option>
+                      <option value="refuted">Refuted</option>
+                      <option value="entered-in-error">Entered in Error</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeSystem">Code System</label>
+                    <select id="codeSystem" formControlName="codeSystem" class="form-control">
+                      <option value="http://snomed.info/sct">SNOMED CT</option>
+                      <option value="http://hl7.org/fhir/sid/icd-10-cm">ICD-10-CM</option>
+                      <option value="http://hl7.org/fhir/sid/icd-9-cm">ICD-9-CM</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeValue">Code Value *</label>
+                    <input id="codeValue" formControlName="codeValue" class="form-control" placeholder="e.g., 38341003" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="codeDisplay">Code Display *</label>
+                    <input id="codeDisplay" formControlName="codeDisplay" class="form-control" placeholder="e.g., Hypertensive disorder" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="subjectReference">Patient Reference *</label>
+                    <input id="subjectReference" formControlName="subjectReference" class="form-control" placeholder="Patient/123" />
+                  </div>
+
+                  <div class="form-group">
+                    <label for="onsetDateTime">Onset Date/Time</label>
+                    <input id="onsetDateTime" type="datetime-local" formControlName="onsetDateTime" class="form-control" />
+                  </div>
+                </div>
+              </div>
+            }
             
             @default {
               <div class="form-grid">
@@ -208,6 +602,7 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
     // Create form when modal data changes
     effect(() => {
       const data = this.modalData();
+      console.log('Modal data changed:', data);
       if (data && data.resourceType) {
         this.createFormForResourceType(data.resourceType);
       }
@@ -216,7 +611,9 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
     // Populate form with existing data when editing
     effect(() => {
       const data = this.modalData();
+      console.log('Checking for form population:', data);
       if (data && data.mode === 'edit' && data.formData && this.resourceForm()) {
+        console.log('Populating form with data:', data.formData);
         this.populateFormWithData(data.formData);
       }
     });
@@ -248,6 +645,82 @@ export class StandardizedResourceFormModalComponent implements OnDestroy {
           birthDate: [''],
           phone: [''],
           email: ['', Validators.email]
+        });
+        break;
+
+      case 'Observation':
+        form = this.fb.group({
+          status: ['final', Validators.required],
+          effectiveDateTime: [''],
+          codeSystem: ['http://loinc.org'],
+          codeValue: ['', Validators.required],
+          codeDisplay: ['', Validators.required],
+          valueType: ['valueQuantity'],
+          valueQuantityValue: [''],
+          valueQuantityUnit: [''],
+          valueStringValue: [''],
+          subjectReference: ['', Validators.required]
+        });
+        break;
+
+      case 'Practitioner':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          active: [true],
+          family: ['', Validators.required],
+          given: ['', Validators.required],
+          gender: [''],
+          birthDate: [''],
+          phone: [''],
+          email: ['', Validators.email]
+        });
+        break;
+
+      case 'Organization':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          active: [true],
+          name: ['', Validators.required],
+          type: [''],
+          phone: [''],
+          email: [''],
+          website: ['']
+        });
+        break;
+
+      case 'Location':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          status: ['active'],
+          name: ['', Validators.required],
+          description: [''],
+          mode: ['instance'],
+          type: [''],
+          phone: [''],
+          email: ['']
+        });
+        break;
+
+      case 'Procedure':
+        form = this.fb.group({
+          status: ['completed', Validators.required],
+          codeSystem: ['http://snomed.info/sct'],
+          codeValue: ['', Validators.required],
+          codeDisplay: ['', Validators.required],
+          subjectReference: ['', Validators.required],
+          performedDateTime: ['']
+        });
+        break;
+
+      case 'Condition':
+        form = this.fb.group({
+          clinicalStatus: ['active', Validators.required],
+          verificationStatus: ['confirmed', Validators.required],
+          codeSystem: ['http://snomed.info/sct'],
+          codeValue: ['', Validators.required],
+          codeDisplay: ['', Validators.required],
+          subjectReference: ['', Validators.required],
+          onsetDateTime: ['']
         });
         break;
 

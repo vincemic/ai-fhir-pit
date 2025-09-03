@@ -82,7 +82,7 @@
       @if (searchResults()?.entry && searchResults()?.entry!.length > 0) {
         <div class="results-grid">
           @for (entry of searchResults()?.entry; track entry.resource?.id) {
-            <div class="resource-card" (click)="selectResource(entry.resource!)">
+            <div class="resource-card" (click)="editResource(entry.resource!)">
               <div class="resource-header">
                 <span class="resource-type-badge" [class]="'fhir-resource-badge ' + entry.resource?.resourceType?.toLowerCase()">
                   {{ entry.resource?.resourceType }}
@@ -103,17 +103,8 @@
               </div>
 
               <div class="resource-actions">
-                <button (click)="viewResource(entry.resource!); $event.stopPropagation()" 
-                        class="btn-small"
-                        [disabled]="fhirService.isLoading()">
-                  @if (fhirService.isLoading()) {
-                    <span class="loading-spinner"></span>
-                  } @else {
-                    👁️ View Details
-                  }
-                </button>
                 <button (click)="editResource(entry.resource!); $event.stopPropagation()" 
-                        class="btn-small secondary"
+                        class="btn-small"
                         [disabled]="fhirService.isLoading()">
                   @if (fhirService.isLoading()) {
                     <span class="loading-spinner"></span>
@@ -121,17 +112,6 @@
                     ✏️ Edit
                   }
                 </button>
-                @if (hasReferences(entry.resource!)) {
-                  <button (click)="showReferences(entry.resource!); $event.stopPropagation()" 
-                          class="btn-small secondary"
-                          [disabled]="fhirService.isLoading()">
-                    @if (fhirService.isLoading()) {
-                      <span class="loading-spinner"></span>
-                    } @else {
-                      🔗 References ({{ countReferences(entry.resource!) }})
-                    }
-                  </button>
-                }
               </div>
             </div>
           }
@@ -174,55 +154,6 @@
     </div>
   }
 
-  <!-- Selected Resource Details Modal -->
-  @if (selectedResource()) {
-    <div class="modal-overlay" (click)="closeModal()">
-      <div class="modal-content" (click)="$event.stopPropagation()">
-        <div class="modal-header">
-          <h2>{{ selectedResource()?.resourceType }} Details</h2>
-          <button (click)="closeModal()" class="modal-close">×</button>
-        </div>
-        <div class="modal-body">
-          <app-resource-viewer 
-            [resource]="selectedResource()"
-            [readonly]="true">
-          </app-resource-viewer>
-          
-          @if (referencedResources().length > 0 || isLoadingReferences()) {
-            <div class="referenced-resources-section">
-              <h3>Referenced Resources</h3>
-              @if (isLoadingReferences()) {
-                <div class="loading-indicator">
-                  <span class="loading-spinner"></span>
-                  Loading references...
-                </div>
-              } @else {
-                <div class="referenced-resources">
-                  @for (refResource of referencedResources(); track refResource.id) {
-                    <div class="referenced-resource-card">
-                      <div class="ref-header">
-                        <span class="ref-type">{{ refResource.resourceType }}</span>
-                        <span class="ref-id">{{ refResource.id }}</span>
-                      </div>
-                      <div class="ref-title">{{ getResourceTitle(refResource) }}</div>
-                      <div class="ref-description">{{ getResourceDescription(refResource) }}</div>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          }
-        </div>
-        <div class="modal-footer">
-          <button (click)="editResource(selectedResource()!)" class="btn-secondary">
-            ✏️ Edit Resource
-          </button>
-          <button (click)="closeModal()" class="btn-secondary">Close</button>
-        </div>
-      </div>
-    </div>
-  }
-
   <!-- Resource Form Modal -->
-  <app-resource-form-modal (resourceUpdated)="onResourceUpdated($event)"></app-resource-form-modal>
+  <app-standardized-resource-form-modal (resourceUpdated)="onResourceUpdated($event)"></app-standardized-resource-form-modal>
 </div>

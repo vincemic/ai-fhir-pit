@@ -4,13 +4,13 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { FhirService, FhirResource, FhirBundle, FhirBundleLink, FhirSearchParams } from '../services/fhir.service';
-import { ResourceViewerComponent } from './resource-viewer.component';
-import { ResourceModalService } from '../services/resource-modal.service';
-import { ResourceFormModalComponent } from './resource-form-modal.component';
+import { StandardizedResourceModalService } from '../services/standardized-resource-modal.service';
+import { ModalService } from '../services/modal.service';
+import { StandardizedResourceFormModalComponent } from './standardized-resource-form-modal.component';
 
 @Component({
   selector: 'app-search',
-  imports: [CommonModule, ReactiveFormsModule, ResourceViewerComponent, ResourceFormModalComponent],
+  imports: [CommonModule, ReactiveFormsModule, StandardizedResourceFormModalComponent],
   templateUrl: './search.component.html',
   styleUrl: './search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,14 +19,12 @@ export class SearchComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   protected readonly fhirService = inject(FhirService);
-  protected readonly modalService = inject(ResourceModalService);
+  protected readonly resourceModalService = inject(StandardizedResourceModalService);
+  private readonly modalService = inject(ModalService);
 
   // Signals for reactive state
   protected readonly searchResults = signal<FhirBundle | null>(null);
-  protected readonly selectedResource = signal<FhirResource | null>(null);
   protected readonly isSearching = signal<boolean>(false);
-  protected readonly isLoadingReferences = signal<boolean>(false);
-  protected readonly referencedResources = signal<FhirResource[]>([]);
 
   // Form controls
   protected readonly searchForm: FormGroup;
@@ -98,17 +96,12 @@ export class SearchComponent implements OnDestroy {
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        if (this.selectedResource()) {
-          this.closeModal();
-        }
+        // No action needed - modals are handled by modal service
       });
   }
 
   ngOnDestroy(): void {
-    // Ensure body scroll is unlocked when component is destroyed
-    if (this.selectedResource()) {
-      this.modalService.unlockBodyScroll();
-    }
+    // Modal service handles body scroll locking/unlocking automatically
   }
 
   protected async onSearch(): Promise<void> {
@@ -134,7 +127,6 @@ export class SearchComponent implements OnDestroy {
       count: 20
     });
     this.searchResults.set(null);
-    this.selectedResource.set(null);
   }
 
   protected async followLink(url: string): Promise<void> {
@@ -147,49 +139,13 @@ export class SearchComponent implements OnDestroy {
   }
 
   protected selectResource(resource: FhirResource): void {
-    this.selectedResource.set(resource);
-    this.modalService.lockBodyScroll();
+    // Always open in edit mode instead of view mode
+    this.editResource(resource);
   }
 
   protected viewResource(resource: FhirResource): void {
-    this.selectedResource.set(resource);
-    this.modalService.lockBodyScroll();
-  }
-
-  protected closeModal(): void {
-    this.selectedResource.set(null);
-    this.referencedResources.set([]);
-    this.isLoadingReferences.set(false);
-    this.modalService.unlockBodyScroll();
-  }
-
-  protected async showReferences(resource: FhirResource): Promise<void> {
-    this.isLoadingReferences.set(true);
-    this.referencedResources.set([]);
-    
-    try {
-      const references = this.extractReferences(resource);
-      const referencedResources: FhirResource[] = [];
-      
-      for (const reference of references) {
-        try {
-          const referencedResource = await this.fhirService.followReference(reference);
-          if (referencedResource) {
-            referencedResources.push(referencedResource);
-          }
-        } catch (error) {
-          console.warn('Failed to load reference:', reference, error);
-        }
-      }
-      
-      this.referencedResources.set(referencedResources);
-      this.selectedResource.set(resource); // Show modal with references
-      this.modalService.lockBodyScroll(); // Lock body scroll when modal opens
-    } catch (error) {
-      console.error('Error loading references:', error);
-    } finally {
-      this.isLoadingReferences.set(false);
-    }
+    // Always open in edit mode instead of view mode
+    this.editResource(resource);
   }
 
   private extractReferences(resource: FhirResource): string[] {
@@ -252,33 +208,8 @@ export class SearchComponent implements OnDestroy {
     return new Date(dateString).toLocaleDateString();
   }
 
-  protected hasReferences(resource: FhirResource): boolean {
-    return this.countReferences(resource) > 0;
-  }
-
   protected getLastUpdated(resource: FhirResource): string | null {
     return resource?.meta?.lastUpdated || null;
-  }
-
-  protected countReferences(resource: FhirResource): number {
-    // Count reference fields in the resource
-    let count = 0;
-    const checkForReferences = (obj: any): void => {
-      if (typeof obj === 'object' && obj !== null) {
-        if (obj.reference && typeof obj.reference === 'string') {
-          count++;
-        }
-        Object.values(obj).forEach(value => {
-          if (Array.isArray(value)) {
-            value.forEach(item => checkForReferences(item));
-          } else if (typeof value === 'object') {
-            checkForReferences(value);
-          }
-        });
-      }
-    };
-    checkForReferences(resource);
-    return count;
   }
 
   protected getPaginationLabel(relation: string): string {
@@ -369,7 +300,7 @@ export class SearchComponent implements OnDestroy {
    * Open edit modal for a resource
    */
   protected editResource(resource: FhirResource): void {
-    this.modalService.openEditModal(resource);
+    this.resourceModalService.openEditModal(resource);
   }
 
   /**
@@ -393,12 +324,6 @@ export class SearchComponent implements OnDestroy {
         };
         this.searchResults.set(updatedResults);
       }
-    }
-
-    // Update selected resource if it's the same one
-    const selected = this.selectedResource();
-    if (selected?.id === updatedResource.id && selected?.resourceType === updatedResource.resourceType) {
-      this.selectedResource.set(updatedResource);
     }
   }
 }

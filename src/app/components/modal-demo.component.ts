@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ModalService } from '../services/modal.service';
 import { StandardizedResourceModalService } from '../services/standardized-resource-modal.service';
 import { StandardizedResourceFormModalComponent } from './standardized-resource-form-modal.component';
-import { StandardizedResourceViewModalComponent } from './standardized-resource-view-modal.component';
 import { FhirResource } from '../services/fhir.service';
 
 @Component({
@@ -11,8 +10,7 @@ import { FhirResource } from '../services/fhir.service';
   standalone: true,
   imports: [
     CommonModule, 
-    StandardizedResourceFormModalComponent, 
-    StandardizedResourceViewModalComponent
+    StandardizedResourceFormModalComponent
   ],
   template: `
     <div class="modal-demo">
@@ -42,8 +40,8 @@ import { FhirResource } from '../services/fhir.service';
           <button (click)="createObservation()" class="btn-primary">
             Create Observation
           </button>
-          <button (click)="viewSampleResource()" class="btn-secondary">
-            View Sample Resource
+          <button (click)="editSampleResource()" class="btn-secondary">
+            Edit Sample Resource
           </button>
         </div>
       </div>
@@ -71,10 +69,6 @@ import { FhirResource } from '../services/fhir.service';
       (resourceCreated)="onResourceCreated($event)"
       (resourceUpdated)="onResourceUpdated($event)">
     </app-standardized-resource-form-modal>
-
-    <app-standardized-resource-view-modal
-      (editRequested)="onEditRequested($event)">
-    </app-standardized-resource-view-modal>
   `,
   styles: [`
     .modal-demo {
@@ -238,7 +232,7 @@ export class ModalDemoComponent {
     }
   }
 
-  async viewSampleResource(): Promise<void> {
+  async editSampleResource(): Promise<void> {
     const samplePatient: FhirResource = {
       resourceType: 'Patient',
       id: 'sample-patient',
@@ -265,10 +259,10 @@ export class ModalDemoComponent {
     };
 
     try {
-      await this.resourceModalService.openViewModal(samplePatient);
-      this.lastResult.set({ type: 'view-resource', result: 'Modal closed' });
+      await this.resourceModalService.openEditModal(samplePatient);
+      this.lastResult.set({ type: 'edit-resource', result: 'Modal closed' });
     } catch (error) {
-      this.lastResult.set({ type: 'view-resource', error: 'User cancelled' });
+      this.lastResult.set({ type: 'edit-resource', error: 'User cancelled' });
     }
   }
 
@@ -290,16 +284,6 @@ export class ModalDemoComponent {
   onResourceUpdated(resource: FhirResource): void {
     this.lastResult.set({ 
       type: 'resource-updated', 
-      result: { 
-        resourceType: resource.resourceType, 
-        id: resource.id 
-      } 
-    });
-  }
-
-  onEditRequested(resource: FhirResource): void {
-    this.lastResult.set({ 
-      type: 'edit-requested', 
       result: { 
         resourceType: resource.resourceType, 
         id: resource.id 
