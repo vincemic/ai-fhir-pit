@@ -74,15 +74,21 @@ import { ResourceFormComponent } from './resource-form.interface';
                   <div class="identifier-entry">
                     @if (identifier.type) {
                       <div class="identifier-type">
-                        {{ getCodeableConceptDisplay(identifier.type) }}
+                        <strong>{{ getCodeableConceptDisplay(identifier.type) }}</strong>
                       </div>
                     }
-                    <div class="identifier-value">{{ identifier.value }}</div>
+                    <div class="identifier-value" title="{{ identifier.value }}">
+                      {{ identifier.value }}
+                    </div>
                     @if (identifier.system) {
-                      <div class="identifier-system">{{ identifier.system }}</div>
+                      <div class="identifier-system" title="{{ identifier.system }}">
+                        <small>System: {{ identifier.system }}</small>
+                      </div>
                     }
                     @if (identifier.use) {
-                      <span class="badge use-{{ identifier.use }}">{{ identifier.use }}</span>
+                      <div class="identifier-badges">
+                        <span class="badge use-{{ identifier.use }}">{{ identifier.use }}</span>
+                      </div>
                     }
                   </div>
                 }
@@ -344,8 +350,19 @@ import { ResourceFormComponent } from './resource-form.interface';
 
       .identifiers-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 1rem;
+
+        @media (max-width: 768px) {
+          grid-template-columns: 1fr;
+          gap: 0.75rem;
+        }
+      }
+
+      .identifier-entry {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        min-width: 0; /* Allow container to shrink */
       }
 
       .identifier-value {
@@ -353,6 +370,33 @@ import { ResourceFormComponent } from './resource-form.interface';
         font-size: 1.1rem;
         color: var(--vscode-accent-primary);
         margin-bottom: 0.5rem;
+        word-break: break-all;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+
+      .identifier-system {
+        font-size: 0.85rem;
+        color: var(--vscode-text-secondary);
+        margin-bottom: 0.5rem;
+        word-break: break-all;
+        overflow-wrap: break-word;
+        white-space: pre-wrap;
+      }
+
+      .identifier-type {
+        font-weight: 500;
+        color: var(--vscode-text-primary);
+        margin-bottom: 0.5rem;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+
+      .identifier-badges {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
       }
 
       .telecom-entry {

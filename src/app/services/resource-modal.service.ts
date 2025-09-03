@@ -21,6 +21,9 @@ export class ResourceModalService {
     formData: null
   });
 
+  private originalBodyOverflow: string = '';
+  private originalBodyPaddingRight: string = '';
+
   // Public read-only computed properties
   readonly isOpen = computed(() => this.modalState().isOpen);
   readonly mode = computed(() => this.modalState().mode);
@@ -36,6 +39,7 @@ export class ResourceModalService {
       resource: null,
       formData: null
     });
+    this.lockBodyScroll();
   }
 
   openEditModal(resource: FhirResource): void {
@@ -46,6 +50,7 @@ export class ResourceModalService {
       resource,
       formData: this.extractFormDataFromResource(resource)
     });
+    this.lockBodyScroll();
   }
 
   closeModal(): void {
@@ -56,6 +61,7 @@ export class ResourceModalService {
       resource: null,
       formData: null
     });
+    this.unlockBodyScroll();
   }
 
   updateFormData(formData: any): void {
@@ -118,5 +124,32 @@ export class ResourceModalService {
       valueStringValue: resource.valueString || '',
       patientReference: subject.replace('Patient/', '') || ''
     };
+  }
+
+  lockBodyScroll(): void {
+    if (typeof document === 'undefined') return;
+    
+    const body = document.body;
+    const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+    
+    // Store original values
+    this.originalBodyOverflow = body.style.overflow;
+    this.originalBodyPaddingRight = body.style.paddingRight;
+    
+    // Apply scroll lock
+    body.style.overflow = 'hidden';
+    if (scrollBarWidth > 0) {
+      body.style.paddingRight = `${scrollBarWidth}px`;
+    }
+  }
+
+  unlockBodyScroll(): void {
+    if (typeof document === 'undefined') return;
+    
+    const body = document.body;
+    
+    // Restore original values
+    body.style.overflow = this.originalBodyOverflow;
+    body.style.paddingRight = this.originalBodyPaddingRight;
   }
 }

@@ -256,10 +256,15 @@
   align-items: center;
   gap: var(--spacing-sm);
   transition: all var(--transition-fast);
+  position: relative;
 
   &:hover {
     background-color: var(--vscode-bg-tertiary);
     border-color: var(--vscode-accent-primary);
+    
+    .card-action-hint {
+      opacity: 1;
+    }
   }
 
   .resource-icon {
@@ -296,6 +301,23 @@
       font-weight: 600;
       letter-spacing: 0.5px;
     }
+  }
+
+  .card-action-hint {
+    position: absolute;
+    top: var(--spacing-xs);
+    right: var(--spacing-xs);
+    background-color: var(--vscode-accent-primary);
+    color: var(--vscode-text-inverse);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.625rem;
+    font-weight: 500;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+    pointer-events: none;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
   }
 }
 

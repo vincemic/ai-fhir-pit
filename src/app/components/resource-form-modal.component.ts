@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, effect, output } from '@angular/core';
+import { Component, inject, signal, computed, effect, output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ResourceModalService } from '../services/resource-modal.service';
@@ -10,7 +10,7 @@ import { FhirService, FhirResource } from '../services/fhir.service';
   templateUrl: './resource-form-modal.component.html',
   styleUrl: './resource-form-modal.component.scss'
 })
-export class ResourceFormModalComponent {
+export class ResourceFormModalComponent implements OnDestroy {
   protected readonly modalService = inject(ResourceModalService);
   private readonly fb = inject(FormBuilder);
   private readonly fhirService = inject(FhirService);
@@ -129,6 +129,35 @@ export class ResourceFormModalComponent {
           bodySiteCode: [''],
           bodySiteDisplay: [''],
           notes: ['']
+        });
+        break;
+
+      case 'Practitioner':
+        form = this.fb.group({
+          identifier: ['', Validators.required],
+          active: [true],
+          family: ['', Validators.required],
+          given: ['', Validators.required],
+          prefix: [''],
+          suffix: [''],
+          gender: [''],
+          birthDate: [''],
+          phone: [''],
+          email: [''],
+          addressLine: [''],
+          addressCity: [''],
+          addressState: [''],
+          addressPostalCode: [''],
+          addressCountry: [''],
+          qualificationCode: [''],
+          qualificationDisplay: [''],
+          qualificationIssuer: [''],
+          qualificationStart: [''],
+          qualificationEnd: [''],
+          languageCode: [''],
+          languageDisplay: [''],
+          languagePreferred: [false],
+          photo: ['']
         });
         break;
 
@@ -254,6 +283,9 @@ export class ResourceFormModalComponent {
       case 'Condition':
         resource = this.buildConditionResource(form.value);
         break;
+      case 'Practitioner':
+        resource = this.buildPractitionerResource(form.value);
+        break;
       case 'Organization':
         resource = this.buildOrganizationResource(form.value);
         break;
@@ -316,6 +348,129 @@ export class ResourceFormModalComponent {
     }
 
     return patient;
+  }
+
+  private buildPractitionerResource(formValue: any): any {
+    const practitioner: any = {
+      resourceType: 'Practitioner',
+      identifier: [{
+        system: 'http://example.org/practitioner-ids',
+        value: formValue.identifier
+      }],
+      active: formValue.active,
+      name: [{
+        use: 'official',
+        family: formValue.family,
+        given: formValue.given.split(' ').filter((n: string) => n.trim())
+      }]
+    };
+
+    // Add name prefixes and suffixes
+    if (formValue.prefix) {
+      practitioner.name[0].prefix = formValue.prefix.split(' ').filter((p: string) => p.trim());
+    }
+    if (formValue.suffix) {
+      practitioner.name[0].suffix = formValue.suffix.split(' ').filter((s: string) => s.trim());
+    }
+
+    // Add gender
+    if (formValue.gender) {
+      practitioner.gender = formValue.gender;
+    }
+
+    // Add birth date
+    if (formValue.birthDate) {
+      practitioner.birthDate = formValue.birthDate;
+    }
+
+    // Add telecom (phone and email)
+    if (formValue.phone || formValue.email) {
+      practitioner.telecom = [];
+      if (formValue.phone) {
+        practitioner.telecom.push({
+          system: 'phone',
+          value: formValue.phone,
+          use: 'work'
+        });
+      }
+      if (formValue.email) {
+        practitioner.telecom.push({
+          system: 'email',
+          value: formValue.email,
+          use: 'work'
+        });
+      }
+    }
+
+    // Add address
+    if (formValue.addressLine || formValue.addressCity || formValue.addressState || 
+        formValue.addressPostalCode || formValue.addressCountry) {
+      practitioner.address = [{
+        use: 'work',
+        type: 'physical',
+        line: formValue.addressLine ? [formValue.addressLine] : undefined,
+        city: formValue.addressCity,
+        state: formValue.addressState,
+        postalCode: formValue.addressPostalCode,
+        country: formValue.addressCountry
+      }];
+    }
+
+    // Add qualification
+    if (formValue.qualificationCode) {
+      practitioner.qualification = [{
+        code: {
+          coding: [{
+            system: 'http://terminology.hl7.org/CodeSystem/v2-0360',
+            code: formValue.qualificationCode,
+            display: formValue.qualificationDisplay || formValue.qualificationCode
+          }],
+          text: formValue.qualificationDisplay || formValue.qualificationCode
+        }
+      }];
+
+      // Add issuer
+      if (formValue.qualificationIssuer) {
+        practitioner.qualification[0].issuer = {
+          display: formValue.qualificationIssuer
+        };
+      }
+
+      // Add period
+      if (formValue.qualificationStart || formValue.qualificationEnd) {
+        practitioner.qualification[0].period = {};
+        if (formValue.qualificationStart) {
+          practitioner.qualification[0].period.start = formValue.qualificationStart;
+        }
+        if (formValue.qualificationEnd) {
+          practitioner.qualification[0].period.end = formValue.qualificationEnd;
+        }
+      }
+    }
+
+    // Add communication language
+    if (formValue.languageCode) {
+      practitioner.communication = [{
+        language: {
+          coding: [{
+            system: 'urn:ietf:bcp:47',
+            code: formValue.languageCode,
+            display: formValue.languageDisplay || formValue.languageCode
+          }]
+        },
+        preferred: formValue.languagePreferred
+      }];
+    }
+
+    // Add photo
+    if (formValue.photo) {
+      practitioner.photo = [{
+        contentType: 'image/jpeg',
+        url: formValue.photo
+      }];
+    }
+
+    return practitioner;
   }
 
   private buildObservationResource(formValue: any): any {
@@ -852,5 +1007,12 @@ export class ResourceFormModalComponent {
 
   protected onOverlayClick(): void {
     this.onCancel();
+  }
+
+  ngOnDestroy(): void {
+    // Ensure body scroll is unlocked if component is destroyed while modal is open
+    if (this.modalService.isOpen()) {
+      this.modalService.closeModal();
+    }
   }
 }

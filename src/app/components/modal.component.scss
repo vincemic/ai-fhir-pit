@@ -1,0 +1,238 @@
+// Modal overlay and base styles
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-md, 16px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  overflow: hidden;
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+.modal-content {
+  background: var(--vscode-bg-secondary, #1e1e1e);
+  border: 1px solid var(--vscode-border-primary, #3c3c3c);
+  border-radius: var(--border-radius-md, 8px);
+  box-shadow: var(--shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.5));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: transform 0.2s ease;
+  max-height: 90vh;
+  max-width: 90vw;
+
+  .modal-overlay.show & {
+    transform: scale(1);
+  }
+
+  // Size variants
+  &.modal-sm {
+    width: 400px;
+    max-width: 90vw;
+  }
+
+  &.modal-md {
+    width: 600px;
+    max-width: 90vw;
+  }
+
+  &.modal-lg {
+    width: 800px;
+    max-width: 90vw;
+  }
+
+  &.modal-xl {
+    width: 1200px;
+    max-width: 95vw;
+  }
+
+  &.modal-full {
+    width: 95vw;
+    height: 95vh;
+    max-width: none;
+    max-height: none;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md, 16px);
+  border-bottom: 1px solid var(--vscode-border-primary, #3c3c3c);
+  background: var(--vscode-bg-primary, #252526);
+  min-height: 60px;
+
+  .modal-title {
+    flex: 1;
+    
+    h2 {
+      margin: 0;
+      color: var(--vscode-text-primary, #cccccc);
+      font-size: var(--font-size-lg, 18px);
+      font-weight: 600;
+    }
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--vscode-text-secondary, #858585);
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-sm, 4px);
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: var(--vscode-button-hover-bg, #3c3c3c);
+      color: var(--vscode-text-primary, #cccccc);
+    }
+
+    &:focus {
+      outline: 2px solid var(--vscode-accent-primary, #007acc);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.modal-body {
+  flex: 1;
+  padding: var(--spacing-md, 16px);
+  overflow-y: auto;
+  color: var(--vscode-text-primary, #cccccc);
+
+  // Custom scrollbar
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--vscode-bg-secondary, #1e1e1e);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--vscode-scrollbar-thumb, #424242);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--vscode-scrollbar-thumb-hover, #4f4f4f);
+    }
+  }
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--spacing-sm, 8px);
+  padding: var(--spacing-md, 16px);
+  border-top: 1px solid var(--vscode-border-primary, #3c3c3c);
+  background: var(--vscode-bg-primary, #252526);
+}
+
+// Focus management
+.modal-overlay {
+  &:focus-within {
+    .modal-content {
+      outline: 2px solid var(--vscode-accent-primary, #007acc);
+      outline-offset: 2px;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes modalFadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+// Mobile responsiveness
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: var(--spacing-sm, 8px);
+    align-items: flex-start;
+    padding-top: 20px;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    max-width: none !important;
+    max-height: calc(100vh - 40px);
+    
+    &.modal-full {
+      width: 100vw !important;
+      height: 100vh !important;
+      border-radius: 0;
+    }
+  }
+
+  .modal-header {
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+  }
+
+  .modal-body {
+    padding: var(--spacing-md, 16px);
+  }
+
+  .modal-footer {
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    flex-wrap: wrap;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .modal-content {
+    border: 2px solid;
+  }
+
+  .modal-header,
+  .modal-footer {
+    border-color: currentColor;
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .modal-overlay,
+  .modal-content {
+    transition: none;
+  }
+}

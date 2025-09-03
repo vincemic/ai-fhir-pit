@@ -1,4 +1,4 @@
-import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, signal, computed, inject, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, NavigationEnd } from '@angular/router';
@@ -15,7 +15,7 @@ import { ResourceFormModalComponent } from './resource-form-modal.component';
   styleUrl: './search.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchComponent {
+export class SearchComponent implements OnDestroy {
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   protected readonly fhirService = inject(FhirService);
@@ -104,6 +104,13 @@ export class SearchComponent {
       });
   }
 
+  ngOnDestroy(): void {
+    // Ensure body scroll is unlocked when component is destroyed
+    if (this.selectedResource()) {
+      this.modalService.unlockBodyScroll();
+    }
+  }
+
   protected async onSearch(): Promise<void> {
     if (this.searchForm.invalid) return;
 
@@ -141,16 +148,19 @@ export class SearchComponent {
 
   protected selectResource(resource: FhirResource): void {
     this.selectedResource.set(resource);
+    this.modalService.lockBodyScroll();
   }
 
   protected viewResource(resource: FhirResource): void {
     this.selectedResource.set(resource);
+    this.modalService.lockBodyScroll();
   }
 
   protected closeModal(): void {
     this.selectedResource.set(null);
     this.referencedResources.set([]);
     this.isLoadingReferences.set(false);
+    this.modalService.unlockBodyScroll();
   }
 
   protected async showReferences(resource: FhirResource): Promise<void> {
@@ -174,6 +184,7 @@ export class SearchComponent {
       
       this.referencedResources.set(referencedResources);
       this.selectedResource.set(resource); // Show modal with references
+      this.modalService.lockBodyScroll(); // Lock body scroll when modal opens
     } catch (error) {
       console.error('Error loading references:', error);
     } finally {

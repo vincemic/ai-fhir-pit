@@ -113,7 +113,9 @@
     <h2 class="section-title">Supported FHIR Resources</h2>
     <div class="resource-types-grid">
       @for (resourceType of supportedResources(); track resourceType.name) {
-        <div class="resource-type-card" [attr.data-type]="resourceType.name.toLowerCase()">
+        <div class="resource-type-card clickable-card" 
+             [attr.data-type]="resourceType.name.toLowerCase()"
+             (click)="navigateToCreateResource(resourceType.name)">
           <div class="resource-icon">{{ resourceType.icon }}</div>
           <div class="resource-content">
             <h4>{{ resourceType.name }}</h4>
@@ -121,6 +123,9 @@
             <span class="resource-badge" [class]="'fhir-resource-badge ' + resourceType.name.toLowerCase()">
               {{ resourceType.name }}
             </span>
+          </div>
+          <div class="card-action-hint">
+            <span>Click to create</span>
           </div>
         </div>
       }

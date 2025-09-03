@@ -2,6 +2,7 @@ import { Component, signal, computed, inject, ChangeDetectionStrategy } from '@a
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { FhirService } from '../services/fhir.service';
+import { ResourceModalService } from '../services/resource-modal.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,6 +14,7 @@ import { FhirService } from '../services/fhir.service';
 export class DashboardComponent {
   protected readonly fhirService = inject(FhirService);
   private readonly router = inject(Router);
+  private readonly modalService = inject(ResourceModalService);
 
   protected readonly serverStatus = computed(() => {
     const config = this.fhirService.config();
@@ -21,6 +23,16 @@ export class DashboardComponent {
 
   navigateTo(route: string): void {
     this.router.navigate([route]);
+  }
+
+  navigateToCreateResource(resourceType: string): void {
+    // Navigate to create page and open the modal for the specific resource type
+    this.router.navigate(['/create']).then(() => {
+      // Use a small delay to ensure the create component is loaded
+      setTimeout(() => {
+        this.modalService.openCreateModal(resourceType);
+      }, 100);
+    });
   }
 
   protected readonly supportedResources = signal([

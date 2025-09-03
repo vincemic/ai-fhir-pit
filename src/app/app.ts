@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { FhirService } from './services/fhir.service';
 import { ResourceModalService } from './services/resource-modal.service';
+import { ModalService } from './services/modal.service';
 import { SplashScreenComponent } from './components/splash-screen.component';
+import { ModalContainerComponent } from './components/modal-container.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive, SplashScreenComponent],
+  imports: [RouterOutlet, CommonModule, RouterLink, RouterLinkActive, SplashScreenComponent, ModalContainerComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -17,6 +19,7 @@ export class App {
   private readonly router = inject(Router);
   private readonly fhirService = inject(FhirService);
   private readonly modalService = inject(ResourceModalService);
+  private readonly standardModalService = inject(ModalService);
 
   // Signals for reactive state management
   protected readonly title = signal('FHIR-PIT');
@@ -49,10 +52,16 @@ export class App {
         this.currentRoute.set(event.url);
         this.isMobileMenuOpen.set(false); // Close mobile menu on navigation
         
-        // Close modal dialogs on navigation
+        // Close modal dialogs on navigation (both old and new modal systems)
         if (this.modalService.isOpen()) {
           this.modalService.closeModal();
         }
+        if (this.standardModalService.hasOpenModals()) {
+          this.standardModalService.closeAll();
+        }
+
+        // Always scroll to top after navigation
+        window.scrollTo(0, 0);
       });
 
     // Test initial connection
